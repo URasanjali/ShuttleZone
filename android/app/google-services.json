@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1018176151615",
+    "project_id": "shuttlezone-4e7bf",
+    "storage_bucket": "shuttlezone-4e7bf.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1018176151615:android:b23edee741efee3010d88a",
+        "android_client_info": {
+          "package_name": "com.shut"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBHrag3sToGu9hjnjCbBZbaLr7J7T4eMgs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
