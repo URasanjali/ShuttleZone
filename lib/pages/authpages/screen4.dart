@@ -20,7 +20,7 @@ class _Screen4State extends State<Screen4> {
   final passwordController = TextEditingController();
   final confirmPasswordController = TextEditingController();
   String? errorMessage;
-  String selectedRole = 'User';
+  String selectedRole = 'Court Booker';
 
   @override
   void dispose() {
@@ -30,6 +30,92 @@ class _Screen4State extends State<Screen4> {
     confirmPasswordController.dispose();
     super.dispose();
   }
+
+
+
+// Future<void> signUp(dynamic confirmPassword) async {
+//   setState(() {
+//     errorMessage = null;
+//   });
+
+//   if (usernameController.text.trim().isEmpty ||
+//       emailController.text.trim().isEmpty ||
+//       passwordController.text.isEmpty ||
+//       confirmPasswordController.text.isEmpty) {
+//     setState(() {
+//       errorMessage = "Please fill all fields";
+//     });
+//     return;
+//   }
+
+//   if (passwordController.text != confirmPassword.text) {
+//     setState(() {
+//       errorMessage = "Passwords do not match";
+//     });
+//     return;
+//   }
+
+//   if (!acceptTerms) {
+//     setState(() {
+//       errorMessage = "You must accept the terms and conditions";
+//     });
+//     return;
+//   }
+
+//   try {
+//     UserCredential userCredential =
+//         await FirebaseAuth.instance.createUserWithEmailAndPassword(
+//       email: emailController.text.trim(),
+//       password: passwordController.text.trim(),
+//     );
+
+//     String uid = userCredential.user!.uid;
+//     String role = selectedRole ?? 'User'; // ✅ Ensures role is set
+
+//     Map<String, dynamic> userData = {
+//       'username': usernameController.text.trim(),
+//       'email': emailController.text.trim(),
+//       'role': role, // ✅ Always sets role
+//       'createdAt': FieldValue.serverTimestamp(),
+//     };
+
+//     if (role == 'Court Owner') {
+//       await FirebaseFirestore.instance.collection('courtOwners').doc(uid).set(userData);
+//       await removeCourtOwnerFromUsers(uid); // ✅ Remove from users if mistakenly added
+//     } else {
+//       await FirebaseFirestore.instance.collection('users').doc(uid).set(userData);
+//     }
+
+//     showDialog(
+//       context: context,
+//       builder: (context) => AlertDialog(
+//         title: const Text("Registration Successful"),
+//         content: const Text("Your account has been created."),
+//         actions: [
+//           TextButton(
+//             onPressed: () {
+//               Navigator.pushReplacement(
+//                 context,
+//                 MaterialPageRoute(
+//                   builder: (context) => Login(showScreen4: () {  }, showSignUp: () {  }, showLogin: () {  },),
+//                 ),
+//               );
+//             },
+//             child: const Text("OK"),
+//           ),
+//         ],
+//       ),
+//     );
+//   } on FirebaseAuthException catch (e) {
+//     setState(() {
+//       errorMessage = e.message ?? "An error occurred.";
+//     });
+//   } catch (e) {
+//     setState(() {
+//       errorMessage = "Unexpected error. Please try again.";
+//     });
+//   }
+// }
 
 Future<void> signUp() async {
   setState(() {
@@ -61,6 +147,13 @@ Future<void> signUp() async {
     return;
   }
 
+  if (selectedRole.isEmpty) {
+    setState(() {
+      errorMessage = "Please select a role";
+    });
+    return;
+  }
+
   try {
     // Step 1: Create user in Firebase Authentication
     UserCredential userCredential =
@@ -69,19 +162,28 @@ Future<void> signUp() async {
       password: passwordController.text.trim(),
     );
 
-    // Determine the Firestore collection based on the selected role
-    String collectionName = selectedRole == 'User' ? 'users' : 'courtOwners';
-
-    // Step 2: Store additional user data in Firestore
-    await FirebaseFirestore.instance
-        .collection(collectionName)
-        .doc(userCredential.user!.uid)
-        .set({
-      'username': usernameController.text.trim(),
-      'email': emailController.text.trim(),
-      'role': selectedRole,
-      'createdAt': FieldValue.serverTimestamp(),
-    });
+    // Step 2: Store additional user data in Firestore (only for selected role)
+    if (selectedRole == 'Court Booker') {
+      await FirebaseFirestore.instance
+          .collection('Court Booker')
+          .doc(userCredential.user!.uid)
+          .set({
+        'username': usernameController.text.trim(),
+        'email': emailController.text.trim(),
+        'role': selectedRole,
+        'createdAt': FieldValue.serverTimestamp(),
+      });
+    } else if (selectedRole == 'Court Owner') {
+      await FirebaseFirestore.instance
+          .collection('Courtowners')
+          .doc(userCredential.user!.uid)
+          .set({
+        'username': usernameController.text.trim(),
+        'email': emailController.text.trim(),
+        'role': selectedRole,
+        'createdAt': FieldValue.serverTimestamp(),
+      });
+    }
 
     // Step 3: Show success dialog and wait for user interaction
     showDialog(
@@ -115,17 +217,16 @@ Future<void> signUp() async {
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: () {
-                    //Navigator.pop(context); // Close the dialog
                     Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
                         builder: (context) => Login(
-                          showScreen4: () {}, // Pass any required functions
-                          showSignUp: () {}, 
-                          showLogin: () {}, 
+                          showScreen4: () {},
+                          showSignUp: () {},
+                          showLogin: () {},
                         ),
                       ),
-                    ); // Navigate to the login page
+                    );
                   },
                   child: const Text('OK'),
                 ),
@@ -145,11 +246,42 @@ Future<void> signUp() async {
     });
   }
 }
+
+// Future<void> removeCourtOwnerFromUsers(String uid) async {
+//   DocumentSnapshot userDoc =
+//       await FirebaseFirestore.instance.collection('users').doc(uid).get();
+
+//   if (userDoc.exists) {
+//     await FirebaseFirestore.instance.collection('users').doc(uid).delete();
+//   }
+// }
+// void cleanUpCourtOwners() async {
+//   try {
+//     // Fetch all users
+//     QuerySnapshot snapshot = await FirebaseFirestore.instance.collection('users').get();
+
+//     for (var doc in snapshot.docs) {
+//       var data = doc.data() as Map<String, dynamic>;
+
+//       // Check if 'role' is missing or null
+//       if (!data.containsKey('role') || data['role'] == null) {
+//         await doc.reference.delete(); // Delete the document
+//         print('Deleted user: ${doc.id}');
+//       }
+//     }
+
+//     print('Cleanup completed successfully!');
+//   } catch (e) {
+//     print('Error cleaning up: $e');
+//   }
+// }
+
+
 void navigateToAuthPage() {
     
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(builder: (context) => AuthPage()),
+      MaterialPageRoute(builder: (context) => const AuthPage()),
     );
 }
 
@@ -198,7 +330,7 @@ Widget build(BuildContext context) {
             ),
             DropdownButton<String>(
               value: selectedRole,
-              items: ['User', 'Court Owner'].map((role) {
+              items: ['Court Booker', 'Court Owner'].map((role) {
                 return DropdownMenuItem<String>(
                   value: role,
                   child: Text(role),
@@ -209,8 +341,9 @@ Widget build(BuildContext context) {
                   selectedRole = value!;
                 });
               },
-            ),
-            if (errorMessage != null)
+            )
+            ,
+                        if (errorMessage != null)
               Padding(
                 padding: const EdgeInsets.only(top: 8.0),
                 child: Text(

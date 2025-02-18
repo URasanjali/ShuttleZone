@@ -39,6 +39,11 @@ dependencies:
   device_preview: ^1.2.0
   cloud_firestore: ^5.6.1
   firebase_auth: ^5.4.0
+  image_picker: ^1.1.2
+  cloudinary: ^1.2.0
+  file_picker: ^9.0.0
+  firebase_storage: ^12.4.2
+  cached_network_image: ^3.4.1
 
 dev_dependencies:
   flutter_test:

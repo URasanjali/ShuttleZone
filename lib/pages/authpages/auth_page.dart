@@ -3,6 +3,8 @@ import 'package:shuttlezone/pages/authpages/login.dart';
 import 'screen4.dart'; // Import your Screen4 class
 
 class AuthPage extends StatefulWidget {
+  const AuthPage({super.key});
+
   @override
   _AuthPageState createState() => _AuthPageState();
 }
