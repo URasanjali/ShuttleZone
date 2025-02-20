@@ -5,8 +5,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:shuttlezone/Pages/filterscreen.dart';
 import 'package:shuttlezone/Pages/notificationpage.dart';
 import 'package:shuttlezone/pages/courtdetails.dart';
-
-
 import 'package:shuttlezone/pages/profilepage.dart';
 // Import the ProfilePage here
 
@@ -33,7 +31,8 @@ class _Home extends State<Home> {
   Future<void> fetchAllCourts() async {
     try {
       // Fetch all users in the Courtowners collection
-      var usersSnapshot = await FirebaseFirestore.instance.collection('Courtowners').get();
+      var usersSnapshot =
+          await FirebaseFirestore.instance.collection('Courtowners').get();
 
       if (usersSnapshot.docs.isEmpty) {
         print("No users found.");
@@ -64,7 +63,8 @@ class _Home extends State<Home> {
               'courtId': courtDoc.id,
               'name': courtData['name'] ?? 'Unnamed Court',
               'District': courtData['District'] ?? 'Unknown District',
-              'image': courtData['image'] ?? 'https://example.com/default-image.jpg',
+              'image':
+                  courtData['image'] ?? 'https://example.com/default-image.jpg',
               'userId': userId, // Optionally, track the user who owns the court
             });
           }
@@ -107,12 +107,14 @@ class _Home extends State<Home> {
           child: CircleAvatar(
             backgroundImage: user?.photoURL != null
                 ? NetworkImage(user!.photoURL!)
-                : const AssetImage('assets/profile_image.jpeg') as ImageProvider,
+                : const AssetImage('assets/profile_image.jpeg')
+                    as ImageProvider,
           ),
         ),
         title: Text(
           "Hi, ${user?.displayName ?? 'User'}",
-          style: const TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+          style:
+              const TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
         ),
         actions: [
           IconButton(
@@ -157,12 +159,19 @@ class _Home extends State<Home> {
                 IconButton(
                   onPressed: () {
                     Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => FilterScreen(
-                                  onFiltersApplied: (filters) {},
-                                  courtsData: const [],
-                                )));
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => FilterScreen(
+                          courtsData: courtsData, // Pass the courts data
+                          onFiltersApplied: (filtered) {
+                            // Handle the filtered data here, e.g., update the UI
+                            setState(() {
+                              courtsData = filtered;
+                            });
+                          },
+                        ),
+                      ),
+                    );
                   },
                   icon: const Icon(Icons.filter_list),
                   color: const Color.fromARGB(255, 78, 78, 78),
@@ -181,7 +190,8 @@ class _Home extends State<Home> {
                   : courtsData.isEmpty
                       ? const Center(child: Text("No courts available"))
                       : GridView.builder(
-                          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                          gridDelegate:
+                              const SliverGridDelegateWithFixedCrossAxisCount(
                             crossAxisCount: 2,
                             childAspectRatio: 0.75,
                             crossAxisSpacing: 10,
@@ -190,8 +200,8 @@ class _Home extends State<Home> {
                           itemCount: courtsData.length,
                           itemBuilder: (context, index) {
                             final court = courtsData[index];
-                            final imageUrl =
-                                court['image'] ?? 'https://example.com/default-image.jpg';
+                            final imageUrl = court['image'] ??
+                                'https://example.com/default-image.jpg';
                             return CourtCard(
                               name: court['name'],
                               District: court['District'],
@@ -285,7 +295,8 @@ class CourtCard extends StatelessWidget {
             MaterialPageRoute(
               builder: (context) => Courtdetails(
                 userId: userId, // Pass actual userId
-                courtId: courtId, courtDistrict: '', name: '', district: '', image: '', courtName: '', // Pass actual courtId
+                courtId: courtId, courtDistrict: '', name: '', district: '',
+                image: '', courtName: '', // Pass actual courtId
               ),
             ),
           );
@@ -296,7 +307,8 @@ class CourtCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               ClipRRect(
-                borderRadius: const BorderRadius.vertical(top: Radius.circular(15)),
+                borderRadius:
+                    const BorderRadius.vertical(top: Radius.circular(15)),
                 child: Image.network(
                   image,
                   fit: BoxFit.cover,
@@ -308,7 +320,8 @@ class CourtCard extends StatelessWidget {
                 padding: const EdgeInsets.all(8.0),
                 child: Text(
                   name,
-                  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  style: const TextStyle(
+                      fontSize: 16, fontWeight: FontWeight.bold),
                 ),
               ),
               Padding(
@@ -329,7 +342,12 @@ class CourtCard extends StatelessWidget {
                       MaterialPageRoute(
                         builder: (context) => Courtdetails(
                           userId: userId,
-                          courtId: courtId, courtDistrict: '', name: '', district: '', image: '', courtName: '',
+                          courtId: courtId,
+                          courtDistrict: '',
+                          name: '',
+                          district: '',
+                          image: '',
+                          courtName: '',
                         ),
                       ),
                     );

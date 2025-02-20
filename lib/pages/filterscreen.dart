@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
-
+import 'filtered_courts_screen.dart';
 
 class FilterScreen extends StatefulWidget {
   final List<Map<String, dynamic>> courtsData;
+  final Function(List<Map<String, dynamic>>) onFiltersApplied;
 
   const FilterScreen({
-    super.key,
-    required this.courtsData, required Null Function(dynamic filters) onFiltersApplied,
-  });
+    Key? key,
+    required this.courtsData,
+    required this.onFiltersApplied,
+  }) : super(key: key);
 
   @override
   _FilterScreenState createState() => _FilterScreenState();
@@ -16,15 +18,42 @@ class FilterScreen extends StatefulWidget {
 class _FilterScreenState extends State<FilterScreen> {
   // Dropdown filter options
   final List<String> districts = [
-    'Ampara', 'Anuradhapura', 'Badulla', 'Batticaloa', 'Colombo',
-    'Galle', 'Gampaha', 'Hambantota', 'Jaffna', 'Kalutara',
-    'Kandy', 'Kegalle', 'Kilinochchi', 'Kurunegala', 'Mannar',
-    'Matale', 'Matara', 'Monaragala', 'Mullaitivu', 'Nuwara Eliya',
-    'Polonnaruwa', 'Puttalam', 'Ratnapura', 'Trincomalee', 'Vavuniya'
+    'Ampara',
+    'Anuradhapura',
+    'Badulla',
+    'Batticaloa',
+    'Colombo',
+    'Galle',
+    'Gampaha',
+    'Hambantota',
+    'Jaffna',
+    'Kalutara',
+    'Kandy',
+    'Kegalle',
+    'Kilinochchi',
+    'Kurunegala',
+    'Mannar',
+    'Matale',
+    'Matara',
+    'Monaragala',
+    'Mullaitivu',
+    'Nuwara Eliya',
+    'Polonnaruwa',
+    'Puttalam',
+    'Ratnapura',
+    'Trincomalee',
+    'Vavuniya'
   ];
 
   final List<String> categories = ['Tennis', 'Badminton'];
-  final List<String> durations = ['30 min', '1 h', '1 h 30 min', '2 h', '2 h 30 min', '3 h'];
+  final List<String> durations = [
+    '30 min',
+    '1 h',
+    '1 h 30 min',
+    '2 h',
+    '2 h 30 min',
+    '3 h'
+  ];
 
   // Selected filter values
   String? selectedDistrict;
@@ -68,7 +97,8 @@ class _FilterScreenState extends State<FilterScreen> {
     // Apply district filter
     if (selectedDistrict != null) {
       filteredCourts = filteredCourts
-          .where((court) => court['Distric'] == selectedDistrict)
+          .where(
+              (court) => court['District'] == selectedDistrict) // Corrected key
           .toList();
     }
 
@@ -90,11 +120,11 @@ class _FilterScreenState extends State<FilterScreen> {
 
     // Apply time filter
     if (selectedTime != null) {
-      final selectedTimeString = "${selectedTime!.hour}:${selectedTime!.minute}";
+      final selectedTimeString =
+          "${selectedTime!.hour}:${selectedTime!.minute}";
       filteredCourts = filteredCourts
           .where((court) =>
-              court['time'] != null &&
-              court['time'] == selectedTimeString)
+              court['time'] != null && court['time'] == selectedTimeString)
           .toList();
     }
 
@@ -106,12 +136,13 @@ class _FilterScreenState extends State<FilterScreen> {
     }
 
     // Navigate to FilteredCourtsScreen with the filtered data
-    // Navigator.push(
-    //   context,
-    //   MaterialPageRoute(
-    //     //builder: (context) => FilteredCourtsScreen(),
-    //   ),
-    // );
+
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) =>
+              FilteredCourtsScreen(filteredCourts: filteredCourts),
+        ));
   }
 
   @override
@@ -225,9 +256,11 @@ class _FilterScreenState extends State<FilterScreen> {
                   onPressed: _applyFilters,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFF1B7340),
-                    padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 50, vertical: 15),
                   ),
-                  child: const Text('Apply Filters', style: TextStyle(color: Colors.white)),
+                  child: const Text('Apply Filters',
+                      style: TextStyle(color: Colors.white)),
                 ),
               ),
             ],
@@ -236,7 +269,4 @@ class _FilterScreenState extends State<FilterScreen> {
       ),
     );
   }
-}
-
-class FilteredCourtsScreen {
 }
