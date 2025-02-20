@@ -6,31 +6,62 @@ import 'package:shuttlezone/Pages/filterscreen.dart';
 import 'package:shuttlezone/Pages/notificationpage.dart';
 import 'package:shuttlezone/pages/courtdetails.dart';
 import 'package:shuttlezone/pages/profilepage.dart';
-// Import the ProfilePage here
 
 class Home extends StatefulWidget {
-  const Home({super.key});
+  const Home({Key? key}) : super(key: key);
 
   @override
-  _Home createState() => _Home();
+  _HomeState createState() => _HomeState();
 }
 
-class _Home extends State<Home> {
+class _HomeState extends State<Home> {
   final user = FirebaseAuth.instance.currentUser;
+  String userFirstName = ''; // Store the user's first name
   List<Map<String, dynamic>> courtsData = [];
-  bool isLoading = true; // Initially set to true to show a loading indicator
+  bool isLoading = true;
 
   @override
   void initState() {
     super.initState();
-    //checkAndAddUser(); // Ensure user is added to Firestore
-    fetchAllCourts(); // Fetch all courts from global collection
+    _loadUserData(); // Fetch user data
+    fetchAllCourts();
+  }
+
+  // Fetch user data from Firestore
+  Future<void> _loadUserData() async {
+    try {
+      if (user != null) {
+        DocumentSnapshot doc = await FirebaseFirestore.instance
+            .collection('users')
+            .doc(user!.uid)
+            .get();
+        if (doc.exists) {
+          setState(() {
+            userFirstName = (doc.data() as Map<String, dynamic>)['firstName'] ??
+                'User'; // Get first name or default to "User"
+          });
+        } else {
+          setState(() {
+            userFirstName = user?.displayName ??
+                'User'; // Fallback to Firebase Auth display name
+          });
+        }
+      } else {
+        setState(() {
+          userFirstName = 'User'; // Default if no user is logged in
+        });
+      }
+    } catch (e) {
+      print('Error loading user data: $e');
+      setState(() {
+        userFirstName = 'User'; // Default on error
+      });
+    }
   }
 
   // Fetch all courts from the global courts collection
   Future<void> fetchAllCourts() async {
     try {
-      // Fetch all users in the Courtowners collection
       var usersSnapshot =
           await FirebaseFirestore.instance.collection('Courtowners').get();
 
@@ -45,11 +76,9 @@ class _Home extends State<Home> {
 
       List<Map<String, dynamic>> allCourts = [];
 
-      // Iterate through each user to fetch their courts
       for (var userDoc in usersSnapshot.docs) {
         String userId = userDoc.id;
 
-        // Fetch the courts for the current user
         var courtsSnapshot = await FirebaseFirestore.instance
             .collection('Courtowners')
             .doc(userId)
@@ -65,13 +94,12 @@ class _Home extends State<Home> {
               'District': courtData['District'] ?? 'Unknown District',
               'image':
                   courtData['image'] ?? 'https://example.com/default-image.jpg',
-              'userId': userId, // Optionally, track the user who owns the court
+              'userId': userId,
             });
           }
         }
       }
 
-      // Update the state with all courts
       setState(() {
         courtsData = allCourts;
         isLoading = false;
@@ -112,7 +140,7 @@ class _Home extends State<Home> {
           ),
         ),
         title: Text(
-          "Hi, ${user?.displayName ?? 'User'}",
+          "Hi, $userFirstName", // Use the user's first name
           style:
               const TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
         ),
@@ -162,9 +190,8 @@ class _Home extends State<Home> {
                       context,
                       MaterialPageRoute(
                         builder: (context) => FilterScreen(
-                          courtsData: courtsData, // Pass the courts data
+                          courtsData: courtsData,
                           onFiltersApplied: (filtered) {
-                            // Handle the filtered data here, e.g., update the UI
                             setState(() {
                               courtsData = filtered;
                             });
@@ -271,14 +298,14 @@ class CourtCard extends StatelessWidget {
   final String courtDistrict;
 
   const CourtCard({
-    super.key,
+    Key? key,
     required this.name,
     required this.District,
     required this.image,
     required this.courtId,
     required this.userId,
     required this.courtDistrict,
-  });
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -289,24 +316,23 @@ class CourtCard extends StatelessWidget {
       elevation: 5,
       child: InkWell(
         onTap: () {
-          // Navigate to CourtDetail page with the actual values
           Navigator.push(
             context,
             MaterialPageRoute(
               builder: (context) => Courtdetails(
-                userId: userId, // Pass actual userId
+                userId: userId,
                 courtId: courtId,
                 courtDistrict: '',
                 name: '',
                 district: '',
                 image: '',
-                courtName: '', // Pass actual courtId
+                courtName: '',
               ),
             ),
           );
         },
         child: SizedBox(
-          height: 300, // Adjust the height as needed
+          height: 300,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -340,7 +366,6 @@ class CourtCard extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 8.0),
                 child: ElevatedButton(
                   onPressed: () {
-                    // Navigate to CourtDetail page with the actual values
                     Navigator.push(
                       context,
                       MaterialPageRoute(
@@ -368,7 +393,7 @@ class CourtCard extends StatelessWidget {
                   ),
                 ),
               ),
-              const SizedBox(height: 10), // Additional space if needed
+              const SizedBox(height: 10),
             ],
           ),
         ),
