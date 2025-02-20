@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-
 import 'package:shuttlezone/Pages/filterscreen.dart';
 import 'package:shuttlezone/Pages/notificationpage.dart';
 import 'package:shuttlezone/pages/courtdetails.dart';
 import 'package:shuttlezone/pages/profilepage.dart';
+import 'package:shuttlezone/pages/bookings_page.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -16,18 +16,17 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   final user = FirebaseAuth.instance.currentUser;
-  String userFirstName = ''; // Store the user's first name
+  String userFirstName = '';
   List<Map<String, dynamic>> courtsData = [];
   bool isLoading = true;
 
   @override
   void initState() {
     super.initState();
-    _loadUserData(); // Fetch user data
+    _loadUserData();
     fetchAllCourts();
   }
 
-  // Fetch user data from Firestore
   Future<void> _loadUserData() async {
     try {
       if (user != null) {
@@ -37,29 +36,27 @@ class _HomeState extends State<Home> {
             .get();
         if (doc.exists) {
           setState(() {
-            userFirstName = (doc.data() as Map<String, dynamic>)['firstName'] ??
-                'User'; // Get first name or default to "User"
+            userFirstName =
+                (doc.data() as Map<String, dynamic>)['firstName'] ?? 'User';
           });
         } else {
           setState(() {
-            userFirstName = user?.displayName ??
-                'User'; // Fallback to Firebase Auth display name
+            userFirstName = user?.displayName ?? 'User';
           });
         }
       } else {
         setState(() {
-          userFirstName = 'User'; // Default if no user is logged in
+          userFirstName = 'User';
         });
       }
     } catch (e) {
       print('Error loading user data: $e');
       setState(() {
-        userFirstName = 'User'; // Default on error
+        userFirstName = 'User';
       });
     }
   }
 
-  // Fetch all courts from the global courts collection
   Future<void> fetchAllCourts() async {
     try {
       var usersSnapshot =
@@ -114,7 +111,6 @@ class _HomeState extends State<Home> {
     }
   }
 
-  // Get auth token for the current user
   Future<String?> getAuthToken() async {
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
@@ -140,7 +136,7 @@ class _HomeState extends State<Home> {
           ),
         ),
         title: Text(
-          "Hi, $userFirstName", // Use the user's first name
+          "Hi, $userFirstName",
           style:
               const TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
         ),
@@ -252,17 +248,17 @@ class _HomeState extends State<Home> {
           color: Color(0xFF1B7340),
         ),
         unselectedLabelStyle: const TextStyle(fontSize: 12),
-        onTap: (index) async {
-          String? authToken = await getAuthToken();
+        onTap: (index) {
           switch (index) {
             case 0:
-              // Navigate to Home page (if needed)
               break;
             case 1:
-              // Navigate to Bookings page (if needed)
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const BookingsPage()),
+              );
               break;
             case 2:
-              // Navigate to Profile page
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => ProfilePage()),

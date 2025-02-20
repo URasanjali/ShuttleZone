@@ -69,6 +69,7 @@ flutter:
     - assets/booking-icon.png
     - assets/profile_image.jpeg
     - assets/badminton-court.jpeg
+    - assets/no_bookings.png
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
