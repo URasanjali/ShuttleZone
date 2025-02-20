@@ -295,8 +295,12 @@ class CourtCard extends StatelessWidget {
             MaterialPageRoute(
               builder: (context) => Courtdetails(
                 userId: userId, // Pass actual userId
-                courtId: courtId, courtDistrict: '', name: '', district: '',
-                image: '', courtName: '', // Pass actual courtId
+                courtId: courtId,
+                courtDistrict: '',
+                name: '',
+                district: '',
+                image: '',
+                courtName: '', // Pass actual courtId
               ),
             ),
           );
