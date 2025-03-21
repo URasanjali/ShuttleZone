@@ -478,7 +478,7 @@ class BookingPage extends StatefulWidget {
 }
 
 class _BookingPageState extends State<BookingPage> {
-  final int courtCostPer30Min = 500;
+  int? courtCostPer30Min;
   List<String> availableSlots = [];
   List<String> selectedSlots = [];
   int totalCost = 0;
@@ -491,32 +491,39 @@ class _BookingPageState extends State<BookingPage> {
     super.initState();
     fetchCourtOwner();
   }
+Future<void> fetchCourtOwner() async {
+  try {
+    QuerySnapshot courtOwnersQuery = await FirebaseFirestore.instance.collection('Courtowners').get();
 
-  Future<void> fetchCourtOwner() async {
-    try {
-      QuerySnapshot courtOwnersQuery = await FirebaseFirestore.instance.collection('Courtowners').get();
+    for (var ownerDoc in courtOwnersQuery.docs) {
+      String ownerId = ownerDoc.id;
 
-      for (var ownerDoc in courtOwnersQuery.docs) {
-        String ownerId = ownerDoc.id;
+      DocumentSnapshot courtDoc = await FirebaseFirestore.instance
+          .collection('Courtowners')
+          .doc(ownerId)
+          .collection('courts')
+          .doc(widget.courtId)
+          .get();
 
-        DocumentSnapshot courtDoc = await FirebaseFirestore.instance
-            .collection('Courtowners')
-            .doc(ownerId)
-            .collection('courts')
-            .doc(widget.courtId)
-            .get();
+      if (courtDoc.exists) {
+        setState(() {
+          courtOwnerId = ownerId;
 
-        if (courtDoc.exists) {
-          setState(() {
-            courtOwnerId = ownerId;
-          });
-          return;
-        }
+          // Fetch the cost and convert it to an integer
+          String costString = courtDoc['Cost']; // Fetch the cost as string
+          int costPer30Min = int.tryParse(costString) ?? 0; // Convert to int safely
+
+          // Update the court cost in your state
+          courtCostPer30Min = costPer30Min;
+        });
+        return;
       }
-    } catch (error) {
-      print("🔥 Error fetching court owner: $error");
     }
+  } catch (error) {
+    print("🔥 Error fetching court owner: $error");
   }
+}
+
 
   Future<void> fetchSlots() async {
     if (courtOwnerId == null || selectedDate == null) {
@@ -604,7 +611,7 @@ class _BookingPageState extends State<BookingPage> {
     setState(() {
       selectedSlots.add(selectedSlot!);
       availableSlots.remove(selectedSlot); // Remove slot from dropdown
-      totalCost += courtCostPer30Min;
+      totalCost += courtCostPer30Min!;
       selectedSlot = null;
     });
   }
@@ -744,7 +751,7 @@ Wrap(
         setState(() {
           availableSlots.add(slot); // Restore slot back to dropdown
           selectedSlots.remove(slot);
-          totalCost -= courtCostPer30Min;
+          totalCost -= courtCostPer30Min!;
         });
       },
     );
