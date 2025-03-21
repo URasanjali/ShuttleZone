@@ -3,13 +3,19 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:shuttlezone/pages/onbordpages/screen1.dart';
 
-import 'firebase_options.dart'; 
+import 'firebase_options.dart';
+
+//import 'package:flutter/material.dart';
+//import 'package:firebase_core/firebase_core.dart';
+//mport 'firebase_options.dart';
+import './pages/authpages/login.dart'; // Import Login Page
+import './pages/profilepage.dart'; // Import Profile Page
 
 //import 'package:device_preview/device_preview.dart'; // Import the package
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized(); 
-  
+  WidgetsFlutterBinding.ensureInitialized();
+
   try {
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
@@ -34,7 +40,6 @@ class MyApp extends StatelessWidget {
       locale: DevicePreview.locale(context), // Use the DevicePreview locale
       builder: DevicePreview.appBuilder, // Wrap the app builder
       home: const Screen1(),
-      
     );
   }
 }
