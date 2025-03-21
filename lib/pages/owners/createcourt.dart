@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:intl/intl.dart';
 
 class CreateCourtScreen extends StatefulWidget {
   const CreateCourtScreen({super.key});
@@ -22,6 +23,11 @@ class _CreateCourtScreenState extends State<CreateCourtScreen> {
   final TextEditingController descriptionController = TextEditingController();
   dynamic selectedImage;
   bool isUploading = false;
+  DateTime? selectedDate;
+TimeOfDay? selectedStartTime;
+TimeOfDay? selectedEndTime;
+
+
 
   final cloudinary = Cloudinary.signedConfig(
     apiKey: '981395536329286',
@@ -198,6 +204,20 @@ Future<DocumentSnapshot> getCourtDetails(String userId, String courtId) async {
     throw 'Error fetching court details: $e';
   }
 }
+// Future<void> pickDate() async {
+//   DateTime? pickedDate = await showDatePicker(
+//     context: context,
+//     initialDate: DateTime.now(),
+//     firstDate: DateTime.now(),  // Prevents past dates
+//     lastDate: DateTime(2100),
+//   );
+
+//   if (pickedDate != null) {
+//     setState(() {
+//       selectedDate = pickedDate;
+//     });
+//   }
+// }
 
 Widget buildCourtDetails(String userId, String courtId) {
   return FutureBuilder<DocumentSnapshot>(
@@ -234,43 +254,111 @@ Widget buildCourtDetails(String userId, String courtId) {
 
 
   @override
-void addDayAndTime() {
-  if (selectedDay != null && From != null && To != null) {
+// void addDayAndTime() {
+//   if (selectedDay != null && From != null && To != null) {
+//     setState(() {
+//       // Check if the selected day already exists in the list
+//       var existingDayIndex = selectedDatesTimes.indexWhere(
+//         (entry) => entry['day'] == selectedDay,
+//       );
+
+//       if (existingDayIndex != -1) {
+//         // Update the existing day's time slots
+//         var existingDay = selectedDatesTimes[existingDayIndex];
+//         var times = existingDay['time']!.split(', ');
+//         times.add('$From - $To');
+//         selectedDatesTimes[existingDayIndex] = {
+//           'day': existingDay['day']!,
+//           'time': times.join(', '),
+//         };
+//       } else {
+//         // Add a new entry for the selected day
+//         selectedDatesTimes.add({
+//           'day': selectedDay!,
+//           'time': '$From - $To',
+//         });
+//       }
+
+//       // Reset the fields after adding
+//       selectedDay = null;
+//       From = null;
+//       To = null;
+//     });
+
+//     ScaffoldMessenger.of(context).showSnackBar(
+//       const SnackBar(content: Text('Day and time slots added successfully')),
+//     );
+//   } else {
+//     ScaffoldMessenger.of(context).showSnackBar(
+//       const SnackBar(content: Text('Please select both day and time')),
+//     );
+//   }
+// }
+
+
+
+void _selectDate(BuildContext context) async {
+  DateTime? pickedDate = await showDatePicker(
+    context: context,
+    initialDate: selectedDate ?? DateTime.now(),
+    firstDate: DateTime(2000),
+    lastDate: DateTime(2101),
+  );
+
+  if (pickedDate != null && pickedDate != selectedDate) {
     setState(() {
-      // Check if the selected day already exists in the list
-      var existingDayIndex = selectedDatesTimes.indexWhere(
-        (entry) => entry['day'] == selectedDay,
-      );
+      selectedDate = pickedDate;
+    });
+  }
+}
 
-      if (existingDayIndex != -1) {
-        // Update the existing day's time slots
-        var existingDay = selectedDatesTimes[existingDayIndex];
-        var times = existingDay['time']!.split(', ');
-        times.add('$From - $To');
-        selectedDatesTimes[existingDayIndex] = {
-          'day': existingDay['day']!,
-          'time': times.join(', '),
-        };
-      } else {
-        // Add a new entry for the selected day
-        selectedDatesTimes.add({
-          'day': selectedDay!,
-          'time': '$From - $To',
-        });
-      }
+void _selectStartTime(BuildContext context) async {
+  TimeOfDay? pickedStartTime = await showTimePicker(
+    context: context,
+    initialTime: selectedStartTime ?? TimeOfDay.now(),
+  );
 
-      // Reset the fields after adding
-      selectedDay = null;
+  if (pickedStartTime != null && pickedStartTime != selectedStartTime) {
+    setState(() {
+      selectedStartTime = pickedStartTime;
+    });
+  }
+}
+
+void _selectEndTime(BuildContext context) async {
+  TimeOfDay? pickedEndTime = await showTimePicker(
+    context: context,
+    initialTime: selectedEndTime ?? TimeOfDay.now(),
+  );
+
+  if (pickedEndTime != null && pickedEndTime != selectedEndTime) {
+    setState(() {
+      selectedEndTime = pickedEndTime;
+    });
+  }
+}
+
+void addDayAndTime() {
+  if (selectedDate != null && From != null && To != null) {
+    setState(() {
+      selectedDatesTimes.add({
+        'date': selectedDate != null
+            ? "${selectedDate!.toLocal()}".split(' ')[0]  // Format date as "yyyy-MM-dd"
+            : '',
+        'time': '$From - $To',
+      });
+
+      selectedDate = null;
       From = null;
       To = null;
     });
 
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Day and time slots added successfully')),
+      const SnackBar(content: Text('Date and time slot added successfully')),
     );
   } else {
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Please select both day and time')),
+      const SnackBar(content: Text('Please select a date and time')),
     );
   }
 }
@@ -446,25 +534,42 @@ InputDecorator(
             const SizedBox(height: 8),
             // Day dropdown
            SizedBox(
-  width: double.infinity, // Makes the width stretch to fill the available space
-  height: 60, // Set the height for the dropdown
-  child: DropdownButton<String>(
-    hint: const Text('Select Day'),
-    value: selectedDay,
-    onChanged: (String? newValue) {
-      setState(() {
-        selectedDay = newValue;
-      });
-    },
-    items: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
-        .map((day) => DropdownMenuItem(
-              value: day,
-              child: Text(day),
-            ))
-        .toList(),
-    isExpanded: true, // Ensures the dropdown stretches to fill the container
-  ),
+  width: double.infinity,
+  child: Column(
+  crossAxisAlignment: CrossAxisAlignment.start,
+  children: [
+    const Text(
+      'Select Date',
+      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+    ),
+    const SizedBox(height: 8),
+    GestureDetector(
+      onTap: () => _selectDate(context),  // Open calendar on tap
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 12.0),
+        decoration: BoxDecoration(
+          color: Colors.grey[200],
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Row(
+          children: [
+            const Icon(Icons.calendar_today, color: Colors.green),
+            const SizedBox(width: 10),
+            Text(
+              selectedDate != null
+                  ? "${selectedDate!.toLocal()}".split(' ')[0]
+                  : 'Select a date',
+              style: TextStyle(fontSize: 16),
+            ),
+          ],
+        ),
+      ),
+    ),
+  ],
+)
+
 ),
+
 
             const SizedBox(height: 8),
             // Time Slot dropdown

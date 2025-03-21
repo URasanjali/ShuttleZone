@@ -205,29 +205,28 @@
 //   }
 
 // }
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:shuttlezone/pages/Users/bookingpage.dart';
 
 class Courtdetails extends StatefulWidget {
-  final String userId; 
+  final String userId;
   final String courtDistrict;
   final String name;
   final String district;
   final String image;
   final String courtName;
-  final String courtId; // Add courtId to the constructor
+  final String courtId;
 
   const Courtdetails({
     Key? key,
-    required this.userId,  
+    required this.userId,
     required this.courtDistrict,
     required this.name,
-    required this.district, 
+    required this.district,
     required this.image,
     required this.courtName,
-    required this.courtId, // Pass courtId to the constructor
+    required this.courtId,
   }) : super(key: key);
 
   @override
@@ -242,9 +241,9 @@ class _CourtdetailsState extends State<Courtdetails> {
     super.initState();
     _courtDetails = FirebaseFirestore.instance
         .collection('Courtowners')
-        .doc(widget.userId) 
+        .doc(widget.userId)
         .collection('courts')
-        .doc(widget.courtId) // Use courtId from the widget
+        .doc(widget.courtId)
         .get();
   }
 
@@ -252,7 +251,7 @@ class _CourtdetailsState extends State<Courtdetails> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Court Details'),
+        title: const Text('Court Details'),
         backgroundColor: const Color(0xFF1B7340),
       ),
       body: FutureBuilder<DocumentSnapshot>(
@@ -264,165 +263,182 @@ class _CourtdetailsState extends State<Courtdetails> {
             return Center(child: Text('Error: ${snapshot.error}'));
           } else if (!snapshot.hasData || !snapshot.data!.exists) {
             return const Center(child: Text('Court not found'));
-          } else {
-            var courtData = snapshot.data!.data() as Map<String, dynamic>;
+          }
 
-            // Fetching data with checks for null or missing fields
-            String courtName = courtData['name'] ?? widget.courtName; // Use widget's courtName as a fallback
-            String image = courtData['image'] ?? ''; // Default to empty string if no image is provided
-            String description = courtData['description'] ?? 'No Description';
-            String District = courtData['District'] ?? 'NO District'; // Use widget's district as fallback
-            String Cost = courtData['Cost'] ?? 'Not Available';
+          var courtData = snapshot.data!.data() as Map<String, dynamic>;
 
-            var availableDaysAndSlots = courtData['availableDaysAndSlots'];
-            if (availableDaysAndSlots == null || availableDaysAndSlots is! List) {
-              availableDaysAndSlots = [];
-            }
+          // Extracting values safely
+          String courtName = courtData['name']?.toString() ?? widget.courtName;
+          String image = courtData['image']?.toString() ?? '';
+          String description =
+              courtData['description']?.toString() ?? 'No Description Available';
+          String district = courtData['District']?.toString() ?? 'No District';
+          String cost = courtData['Cost']?.toString() ?? 'Not Available';
 
-            return SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Center(
-                      child: Text(
-                        courtName,
-                        style: const TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
+          // Fetch available time slots
+          List<dynamic> availableDaysAndSlots =
+              courtData['availableDaysAndSlots'] ?? [];
+
+          return SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Court Name
+                  Center(
+                    child: Text(
+                      courtName,
+                      style: const TextStyle(
+                          fontSize: 24, fontWeight: FontWeight.bold),
                     ),
-                    const SizedBox(height: 16),
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(8.0),
-                      child: image.isEmpty
-                          ? Image.asset('assets/default_image.png')
-                          : Image.network(
-                              image,
-                              height: 200,
-                              width: double.infinity,
-                              fit: BoxFit.cover,
-                            ),
-                    ),
-                    const SizedBox(height: 16),
-                    Row(
-                      children: [
-                        const Icon(Icons.location_on, color: Colors.red),
-                        const SizedBox(width: 8),
-                        Expanded(
-                          child: Text(
-                            District,
-                            style: const TextStyle(fontSize: 16),
+                  ),
+                  const SizedBox(height: 16),
+
+                  // Court Image
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(8.0),
+                    child: image.isEmpty
+                        ? Image.asset('assets/default_image.png')
+                        : Image.network(
+                            image,
+                            height: 200,
+                            width: double.infinity,
+                            fit: BoxFit.cover,
                           ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 16),
-                    Text(
-                      description,
-                      style: const TextStyle(fontSize: 16),
-                    ),
-                    const SizedBox(height: 16),
-                    Row(
-                      children: [
-                        const Icon(Icons.attach_money, color: Colors.green),
-                        const SizedBox(width: 8),
-                        Text(
-                          'Cost: $Cost',
+                  ),
+                  const SizedBox(height: 16),
+
+                  // Location
+                  Row(
+                    children: [
+                      const Icon(Icons.location_on, color: Colors.red),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: Text(
+                          district,
                           style: const TextStyle(fontSize: 16),
                         ),
-                      ],
-                    ),
-                    const SizedBox(height: 16),
-
-                    // Display Available Time Slots
-                    const Text(
-                      'Available Time Slots:',
-                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                    ),
-                    const SizedBox(height: 8),
-                    if (availableDaysAndSlots.isEmpty)
-                      const Text('No available time slots for this court.')
-                    else
-                      ListView.builder(
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        itemCount: availableDaysAndSlots.length,
-                        itemBuilder: (context, index) {
-                          var dayData = availableDaysAndSlots[index];
-                          String day = dayData['day'];
-                          String timeSlotsString = dayData['time'];
-                          
-                          List<String> timeSlots = timeSlotsString.split(',').map((e) => e.trim()).toList();
-
-                          return Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                day,
-                                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                              ),
-                              const SizedBox(height: 8),
-                              Column(
-                                children: timeSlots.map<Widget>((slot) {
-                                  return Row(
-                                    children: [
-                                      const Icon(
-                                        Icons.check_circle,
-                                        color: Colors.green,
-                                      ),
-                                      const SizedBox(width: 8),
-                                      Text(slot),
-                                    ],
-                                  );
-                                }).toList(),
-                              ),
-                              const SizedBox(height: 16),
-                            ],
-                          );
-                        },
                       ),
-                    const SizedBox(height: 16),
-                    Center(
-                      child: ElevatedButton(
-  onPressed: () {
-    // Navigate to the BookingPage
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => BookingPage(
-          courtName: widget.courtName, // Pass the court name
-          courtId: widget.courtId, userId: '',     // Pass the court ID
-        ),
-      ),
-    );
-  },
-  style: ElevatedButton.styleFrom(
-    backgroundColor: const Color(0xFF1B7340),
-    padding: const EdgeInsets.symmetric(
-      horizontal: 120,
-      vertical: 15,
-    ),
-    shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(10),
-    ),
-  ),
-  child: const Text(
-    'Book Now',
-    style: TextStyle(fontSize: 18, color: Colors.white),
-  ),
-)
+                    ],
+                  ),
+                  const SizedBox(height: 16),
 
+                  // Description
+                  Text(
+                    description,
+                    style: const TextStyle(fontSize: 16),
+                  ),
+                  const SizedBox(height: 16),
+
+                  // Cost
+                  Row(
+                    children: [
+                      const Icon(Icons.attach_money, color: Colors.green),
+                      const SizedBox(width: 8),
+                      Text(
+                        'Cost: $cost',
+                        style: const TextStyle(fontSize: 16),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+
+                  // Available Time Slots
+                  const Text(
+                    'Available Time Slots:',
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 8),
+
+                  if (availableDaysAndSlots.isEmpty)
+                    const Text('No available time slots for this court.')
+                  else
+                    ListView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemCount: availableDaysAndSlots.length,
+                      itemBuilder: (context, index) {
+                        var dayData = availableDaysAndSlots[index];
+
+                        // Extracting data safely
+                        String dateString = dayData.containsKey('date')
+                            ? dayData['date'].toString()
+                            : 'Unknown Date';
+                        String timeSlotsString = dayData.containsKey('time')
+                            ? dayData['time'].toString()
+                            : '';
+
+                        List<String> timeSlots = timeSlotsString
+                            .split(',')
+                            .map((e) => e.trim())
+                            .toList();
+
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              dateString,
+                              style: const TextStyle(
+                                  fontSize: 16, fontWeight: FontWeight.bold),
+                            ),
+                            const SizedBox(height: 8),
+                            Column(
+                              children: timeSlots.map<Widget>((slot) {
+                                return Row(
+                                  children: [
+                                    const Icon(Icons.check_circle,
+                                        color: Colors.green),
+                                    const SizedBox(width: 8),
+                                    Text(slot),
+                                  ],
+                                );
+                              }).toList(),
+                            ),
+                            const SizedBox(height: 16),
+                          ],
+                        );
+                      },
                     ),
-                  ],
-                ),
+
+                  const SizedBox(height: 16),
+
+                  // Booking Button
+                  Center(
+                    child: ElevatedButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => BookingPage(
+                              courtName: widget.courtName,
+                              courtId: widget.courtId,
+                              userId: widget.userId,
+                            ),
+                          ),
+                        );
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFF1B7340),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 120, vertical: 15),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                      child: const Text(
+                        'Book Now',
+                        style: TextStyle(fontSize: 18, color: Colors.white),
+                      ),
+                    ),
+                  ),
+                ],
               ),
-            );
-          }
+            ),
+          );
         },
       ),
     );
   }
 }
+
