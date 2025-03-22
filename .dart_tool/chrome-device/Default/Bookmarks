@@ -1,0 +1,157 @@
+{
+   "checksum": "39145919d0cf60ef520ca1a1614e59db",
+   "roots": {
+      "bookmark_bar": {
+         "children": [ {
+            "date_added": "13340936140114605",
+            "date_last_used": "13343501345703939",
+            "guid": "02def7a4-b530-4711-b7c9-3480cc4c6c6b",
+            "id": "9",
+            "meta_info": {
+               "power_bookmark_meta": ""
+            },
+            "name": "Udemy – Deep Learning and NLP A-Z™: How to create a ChatBot 2020-7 – Downloadly",
+            "show_icon": false,
+            "source": "sync",
+            "type": "url",
+            "url": "https://downloadlynet.ir/2020/11/12324/04/deep-learning-and-nlp-a-z-how-to-create-a-chatbot/14/?#/12324-udemy-022357102805.html",
+            "visit_count": 0
+         }, {
+            "date_added": "13340936145971569",
+            "date_last_used": "13343407344120392",
+            "guid": "c8cf9538-0e2b-41d7-844a-4f790854505e",
+            "id": "10",
+            "meta_info": {
+               "power_bookmark_meta": ""
+            },
+            "name": "Search Results for “bot” – Downloadly",
+            "show_icon": false,
+            "source": "sync",
+            "type": "url",
+            "url": "https://downloadlynet.ir/?s=bot",
+            "visit_count": 0
+         }, {
+            "date_added": "13341016344503375",
+            "date_last_used": "0",
+            "guid": "32d683b6-f35c-4617-9a8d-4bf75af30093",
+            "id": "11",
+            "meta_info": {
+               "power_bookmark_meta": ""
+            },
+            "name": "Udemy – Data Science: Deep Learning and Neural Networks in Python 2021-6 – Downloadly",
+            "show_icon": false,
+            "source": "sync",
+            "type": "url",
+            "url": "https://downloadlynet.ir/2022/24/84093/08/data-science-deep-learning-and-neural-networks-in-python/10/?#/84093-udemy-002342102506.html",
+            "visit_count": 0
+         }, {
+            "date_added": "13341016347983954",
+            "date_last_used": "0",
+            "guid": "6433c5cb-f03e-4df3-b9e9-91ac485006c3",
+            "id": "12",
+            "meta_info": {
+               "power_bookmark_meta": ""
+            },
+            "name": "Udemy – Deep Learning and NLP A-Z™: How to create a ChatBot 2020-7 – Downloadly",
+            "show_icon": false,
+            "source": "sync",
+            "type": "url",
+            "url": "https://downloadlynet.ir/2020/11/12324/04/deep-learning-and-nlp-a-z-how-to-create-a-chatbot/14/?#/12324-udemy-222328101605.html",
+            "visit_count": 0
+         }, {
+            "date_added": "13341016354666956",
+            "date_last_used": "13343335013288350",
+            "guid": "cde339e7-bec9-4c78-87a0-9102f37ba59b",
+            "id": "13",
+            "meta_info": {
+               "power_bookmark_meta": ""
+            },
+            "name": "Udemy – DYDX Pairs Trading Bot Build in Python Running in the Cloud 2023-1 – Downloadly",
+            "show_icon": false,
+            "source": "sync",
+            "type": "url",
+            "url": "https://downloadlynet.ir/2023/19/95525/04/dydx-pairs-trading-bot-build-in-python-running-in-the-cloud/14/?#/95525-udemy-002344104106.html",
+            "visit_count": 0
+         }, {
+            "date_added": "13341016363042102",
+            "date_last_used": "0",
+            "guid": "0ecb808d-acc8-4a67-864f-572efa223acb",
+            "id": "14",
+            "meta_info": {
+               "power_bookmark_meta": ""
+            },
+            "name": "Udemy – Automated Trading Bot (Python hands-on bootcamp) 2023-2 – Downloadly",
+            "show_icon": false,
+            "source": "sync",
+            "type": "url",
+            "url": "https://downloadlynet.ir/2023/31/103692/08/automated-trading-bot-python-hands-on-bootcamp/22/?#/103692-udemy-002344105606.html",
+            "visit_count": 0
+         }, {
+            "date_added": "13387094774588151",
+            "date_last_used": "0",
+            "guid": "b1554f95-e3c0-4cb1-9266-a0d9c47b8f3d",
+            "id": "8",
+            "name": "ASUS Software Portal - Exclusive technology",
+            "show_icon": false,
+            "source": "oem_preload",
+            "type": "url",
+            "url": "https://www.asus.com/Software-and-Innovations-Portal/",
+            "visit_count": 0
+         }, {
+            "date_added": "13387094774587979",
+            "date_last_used": "0",
+            "guid": "631fd1ac-de22-4680-a105-8b8d50a1be2a",
+            "id": "7",
+            "name": "MyASUS Software - Get the best from ASUS PC",
+            "show_icon": false,
+            "source": "oem_preload",
+            "type": "url",
+            "url": "https://www.asus.com/ASUS-Software/",
+            "visit_count": 0
+         }, {
+            "date_added": "13387094774585853",
+            "date_last_used": "0",
+            "guid": "2a9dfec6-de2a-4178-8dbd-cc4f62aef595",
+            "id": "6",
+            "name": "McAfee LiveSafe",
+            "show_icon": false,
+            "source": "oem_preload",
+            "type": "url",
+            "url": "https://home.mcafee.com/root/campaign.aspx?cid=247829",
+            "visit_count": 0
+         } ],
+         "date_added": "13387094774252680",
+         "date_last_used": "0",
+         "date_modified": "13387094774588151",
+         "guid": "0bc5d13f-2cba-5d74-951f-3f233fe6c908",
+         "id": "1",
+         "name": "Favorites bar",
+         "source": "unknown",
+         "type": "folder"
+      },
+      "other": {
+         "children": [  ],
+         "date_added": "13387094774252683",
+         "date_last_used": "0",
+         "date_modified": "0",
+         "guid": "82b081ec-3dd3-529c-8475-ab6c344590dd",
+         "id": "2",
+         "name": "Other favorites",
+         "source": "unknown",
+         "type": "folder"
+      },
+      "synced": {
+         "children": [  ],
+         "date_added": "13387094774252688",
+         "date_last_used": "0",
+         "date_modified": "0",
+         "guid": "4cf2e351-0e85-532b-bb37-df045d8f8d0f",
+         "id": "3",
+         "name": "Mobile favorites",
+         "source": "unknown",
+         "type": "folder"
+      }
+   },
+   "sync_metadata": "CkEKHgiIgQISCIX7ULyVAQAAKg4QABgBIAwoBjAAOABAABIAKhg2eU9uSWQ2bVBTYnplb0x6eWlwd25BPT1IA6AGDBKtAQgMEqgBChxuUXdqT3RUWldjaGhGdFloZlFiajc0SS9tbmM9EiQ2NDMzYzVjYi1mMDNlLTRkZjMtYjllOS05MWFjNDg1MDA2YzMYACACKAAw9sjO1LoxONnQztS6MUDFo8Ti2zJKHERqYnlENnRtSGxWREJTblVwS0VEeW00TTUzUT1aHyId3XRPM3kwYTFjckgyaGNRME1Va2ptY3NYOWFocz1lzdfhb8I+AmAFEq0BCAsSqAEKHC9ZSnBsTFpheENvUit1NkZYSTdYb2IvZXB0Zz0SJDMyZDY4M2I2LWYzNWMtNDYxNy05YThkLTRiZjc1YWYzMDA5MxgAIAIoADD3yM7UujE49NDO1LoxQMCjxOLbMkocTm9GVDd6WVlJVlc5WFRrWFVLRFZ4OE1sTENJPVofIh26OWFPdEVxSkNvMlQvZDdzcDN2U2pPQzRwZGxzPWXN1+Fvwj4CYAUSrAEICRKnAQoccEFBWjd2OEpvZlNqZDJqRVlzSGxVVHNRRU9NPRIkMDJkZWY3YTQtYjUzMC00NzExLWI3YzktMzQ4MGNjNGM2YzZiGAAgAigAMPjIztS6MTiO0c7UujFAvqPE4tsyShxMVTlqN2NUVi9md01XT3FnSjlPaDRUaG9QNE09Wh4iHFFYdVFkWVdWNU4wdEhEQ1RVWkpaNkFwR2VMMD1lzdfhb8I+AmAFEq0BCA4SqAEKHDFsUUdqTU4reEoxdktXc2t0cUdjOXVGa3VqMD0SJDBlY2I4MDhkLWFjYzgtNGE2Ny04NjRmLTU3MmVmYTIyM2FjYhgAIAIoADD0yM7UujE4odDO1LoxQMajxOLbMkocUS9KUlZhMGZGU1V5cEdJSyt4VFRVSG9VSm5BPVofIh37V1d1YnVmOStSbjBFVzdkWjQ4T0J4ZTc0aXBFPWXN1+Fvwj4CYAUSrAEIChKnAQocVjBGVDVqSDl2bVZGWmlxWldGQ3YzaGxtcWZzPRIkYzhjZjk1MzgtMGUyYi00MWQ3LTg0NGEtNGY3OTA4NTQ1MDVlGAAgAigAMPXIztS6MTi+0M7UujFAv6PE4tsyShw1aWoyOGNyQWd5S0FOZ1FhSlNlWXdlYXNoRVk9Wh4iHHVvWXpmNExFSWdzZVJDVVQyRWxySWhOQjU2RT1lzdfhb8I+AmAFEq0BCA0SqAEKHHg0ZkRZcTc0QWVqNlFtK0JHRTZpdXdKV3c0WT0SJGNkZTMzOWU3LWJlYzktNGM3OC04N2EwLTkxMDJmMzdiYTU5YhgAIAIoADD6yM7UujE4xtHO1LoxQMajxOLbMkocRllyUW5UNG5NOVBteWI5UzQ3WXhtN0ZzRW44PVofIh3ucW1uZndpaE03K2J5WnVtbVNaV2RxdXoyWjY0PWXN1+Fvwj4CYAUSjgEIAxKJAQocbmpnRHU4OGVDcnZYcDg2cEQ3ZkhHY3FGcDg4PRIkN2MxYzBhNDEtMGE0Yy01OTVjLTkyMzUtMzdhMTBhNzE0MGIyGAAgACgAMI/6+YGbMTiLhPqBmzFAi4T6gZsxShx5ek5CMDFjbjU0QTdjUlUwdVQrL1BnbVR0VW89WgBlAAAAAMI+AmAAEo4BCAESiQEKHHl4Si82ZnZrZWNyN2twNUVRekI0dFdMcGRiRT0SJDQzOWM0NTk4LTJlNDktNThhNC04NjAxLWQ0NzMyZDU5NjVhZRgAIAAoADCJ+vmBmzE4vYP6gZsxQL2D+oGbMUocYVJDV0xnaEY5YjVJbnFLSUR2dUovanZRa0ZjPVoAZQAAAADCPgJgABKOAQgCEokBChxZY1NUb252RVNQd3FDczRMMmNyVmh2NjhMOTg9EiQ1ZTJjYWExNS1hOTcwLTVhMTMtODM4MC05MGExNGUyOThlNmQYACAAKAAwivr5gZsxONiD+oGbMUDYg/qBmzFKHG9QVmtod0JSYlY2NUtDV1IyK0lPTkhXb091OD1aAGUAAAAAwj4CYAAwADgA",
+   "version": 1
+}

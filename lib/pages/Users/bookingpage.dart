@@ -692,13 +692,17 @@
 //   }
 // }
 
-
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:intl/intl.dart'; // For date formatting
+import 'package:intl/intl.dart';
+import 'package:shuttlezone/pages/payment_page.dart'; // For date formatting
 
 class BookingPage extends StatefulWidget {
-  const BookingPage({super.key, required this.courtName, required this.courtId, required this.userId});
+  const BookingPage(
+      {super.key,
+      required this.courtName,
+      required this.courtId,
+      required this.userId});
 
   final String courtName;
   final String courtId;
@@ -725,7 +729,8 @@ class _BookingPageState extends State<BookingPage> {
 
   Future<void> fetchCourtOwner() async {
     try {
-      QuerySnapshot courtOwnersQuery = await FirebaseFirestore.instance.collection('Courtowners').get();
+      QuerySnapshot courtOwnersQuery =
+          await FirebaseFirestore.instance.collection('Courtowners').get();
 
       for (var ownerDoc in courtOwnersQuery.docs) {
         String ownerId = ownerDoc.id;
@@ -774,10 +779,13 @@ class _BookingPageState extends State<BookingPage> {
 
       List<dynamic> availableDaysAndSlots = data['availableDaysAndSlots'];
       List<String> formattedSlots = [];
-      String selectedDateString = DateFormat('yyyy-MM-dd').format(selectedDate!);
+      String selectedDateString =
+          DateFormat('yyyy-MM-dd').format(selectedDate!);
 
       for (var slot in availableDaysAndSlots) {
-        if (slot is Map<String, dynamic> && slot.containsKey('date') && slot['date'] == selectedDateString) {
+        if (slot is Map<String, dynamic> &&
+            slot.containsKey('date') &&
+            slot['date'] == selectedDateString) {
           String rawTime = slot['time'];
           formattedSlots.addAll(generate30MinSlots(rawTime));
         }
@@ -786,7 +794,6 @@ class _BookingPageState extends State<BookingPage> {
       setState(() {
         availableSlots = formattedSlots;
       });
-
     } catch (error) {
       print("🔥 Error fetching slots: $error");
     }
@@ -815,7 +822,8 @@ class _BookingPageState extends State<BookingPage> {
   }
 
   bool isBefore(TimeOfDay time1, TimeOfDay time2) {
-    return time1.hour < time2.hour || (time1.hour == time2.hour && time1.minute < time2.minute);
+    return time1.hour < time2.hour ||
+        (time1.hour == time2.hour && time1.minute < time2.minute);
   }
 
   TimeOfDay addMinutes(TimeOfDay time, int minutes) {
@@ -831,78 +839,30 @@ class _BookingPageState extends State<BookingPage> {
   }
 
   void handleAddSlot() {
-  if (selectedSlot != null && !selectedSlots.contains(selectedSlot)) {
-    setState(() {
-      selectedSlots.add(selectedSlot!);
-      availableSlots.remove(selectedSlot); // Remove slot from dropdown
-      totalCost += courtCostPer30Min;
-      selectedSlot = null;
-    });
-  }
-}
-
-Future<void> handleConfirmBooking() async {
-  if (courtOwnerId == null || selectedDate == null || selectedSlots.isEmpty) {
-    return;
+    if (selectedSlot != null && !selectedSlots.contains(selectedSlot)) {
+      setState(() {
+        selectedSlots.add(selectedSlot!);
+        availableSlots.remove(selectedSlot); // Remove slot from dropdown
+        totalCost += courtCostPer30Min;
+        selectedSlot = null;
+      });
+    }
   }
 
-  try {
-    String selectedDateString = DateFormat('yyyy-MM-dd').format(selectedDate!);
+  void handleConfirmBooking() {
+    if (selectedSlots.isEmpty || selectedDate == null) return;
 
-    await FirebaseFirestore.instance
-        .collection('Courtowners')
-        .doc(courtOwnerId)
-        .collection('courts')
-        .doc(widget.courtId)
-        .update({
-      'availableDaysAndSlots': FieldValue.arrayRemove(selectedSlots.map((slot) => {'date': selectedDateString, 'time': slot}).toList()),
-      'bookedSlots': FieldValue.arrayUnion(selectedSlots.map((slot) => {'date': selectedDateString, 'time': slot}).toList()),
-    });
-
-    setState(() {
-      selectedSlots.clear();
-      totalCost = 0;
-    });
-
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Booking confirmed!')),
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => PaymentPage(
+          amount: totalCost,
+          courtId: widget.courtId,
+          userId: widget.userId,
+        ),
+      ),
     );
-  } catch (error) {
-    print("Error booking slots: $error");
   }
-}
-
-
-  // Future<void> handleConfirmBooking() async {
-  //   if (courtOwnerId == null || selectedDate == null) {
-  //     return;
-  //   }
-
-  //   try {
-  //     String selectedDateString = DateFormat('yyyy-MM-dd').format(selectedDate!);
-
-  //     await FirebaseFirestore.instance
-  //         .collection('Courtowners')
-  //         .doc(courtOwnerId)
-  //         .collection('courts')
-  //         .doc(widget.courtId)
-  //         .update({
-  //       'availableDaysAndSlots': FieldValue.arrayRemove(selectedSlots.map((slot) => {'date': selectedDateString, 'time': slot}).toList()),
-  //       'bookedSlots': FieldValue.arrayUnion(selectedSlots.map((slot) => {'date': selectedDateString, 'time': slot}).toList()),
-  //     });
-
-  //     setState(() {
-  //       availableSlots.removeWhere((slot) => selectedSlots.contains(slot));
-  //       selectedSlots.clear();
-  //       totalCost = 0;
-  //     });
-
-  //     ScaffoldMessenger.of(context).showSnackBar(
-  //         const SnackBar(content: Text('Booking confirmed!')));
-  //   } catch (error) {
-  //     print("Error booking slots: $error");
-  //   }
-  // }
 
   Future<void> selectDate(BuildContext context) async {
     DateTime? pickedDate = await showDatePicker(
@@ -912,7 +872,7 @@ Future<void> handleConfirmBooking() async {
       lastDate: DateTime.now().add(const Duration(days: 30)),
     );
 
-    if (pickedDate != null && pickedDate != selectedDate) {
+    if (pickedDate != selectedDate) {
       setState(() {
         selectedDate = pickedDate;
       });
@@ -934,11 +894,11 @@ Future<void> handleConfirmBooking() async {
           children: [
             ElevatedButton(
               onPressed: () => selectDate(context),
-              child: Text(selectedDate == null ? "Select Date" : DateFormat('yyyy-MM-dd').format(selectedDate!)),
+              child: Text(selectedDate == null
+                  ? "Select Date"
+                  : DateFormat('yyyy-MM-dd').format(selectedDate!)),
             ),
-
             const SizedBox(height: 20),
-
             DropdownButton<String>(
               value: selectedSlot,
               hint: const Text("Choose a time slot"),
@@ -955,37 +915,34 @@ Future<void> handleConfirmBooking() async {
                 );
               }).toList(),
             ),
-
             const SizedBox(height: 20),
-
             ElevatedButton(
               onPressed: handleAddSlot,
               child: const Text("Add Time Slot"),
             ),
-const SizedBox(height: 20),
-Text("Selected Time Slots:", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-
-Wrap(
-  spacing: 8.0,
-  children: selectedSlots.map((slot) {
-    return Chip(
-      label: Text(slot),
-      deleteIcon: Icon(Icons.cancel, color: Colors.red),
-      onDeleted: () {
-        setState(() {
-          availableSlots.add(slot); // Restore slot back to dropdown
-          selectedSlots.remove(slot);
-          totalCost -= courtCostPer30Min;
-        });
-      },
-    );
-  }).toList(),
-),
-
             const SizedBox(height: 20),
-
-            Text("Total Cost: Rs. $totalCost", style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-
+            Text("Selected Time Slots:",
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+            Wrap(
+              spacing: 8.0,
+              children: selectedSlots.map((slot) {
+                return Chip(
+                  label: Text(slot),
+                  deleteIcon: Icon(Icons.cancel, color: Colors.red),
+                  onDeleted: () {
+                    setState(() {
+                      availableSlots.add(slot); // Restore slot back to dropdown
+                      selectedSlots.remove(slot);
+                      totalCost -= courtCostPer30Min;
+                    });
+                  },
+                );
+              }).toList(),
+            ),
+            const SizedBox(height: 20),
+            Text("Total Cost: Rs. $totalCost",
+                style:
+                    const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
             ElevatedButton(
               onPressed: selectedSlots.isNotEmpty ? handleConfirmBooking : null,
               child: const Text("Confirm Booking"),

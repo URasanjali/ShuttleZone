@@ -10,8 +10,12 @@
     "start": "node index.js"
   },
   "dependencies": {
+    "body-parser": "^1.20.3",
+    "cors": "^2.8.5",
+    "express": "^4.21.2",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "stripe": "^17.7.0"
   },
   "devDependencies": {
     "vite": "^5.0.0"
