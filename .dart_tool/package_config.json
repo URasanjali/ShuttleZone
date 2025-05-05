@@ -260,6 +260,12 @@
       "languageVersion": "3.5"
     },
     {
+      "name": "flutter_stripe",
+      "rootUri": "file:///C:/Users/IPK/AppData/Local/Pub/Cache/hosted/pub.dev/flutter_stripe-11.3.0",
+      "packageUri": "lib/",
+      "languageVersion": "3.0"
+    },
+    {
       "name": "flutter_test",
       "rootUri": "file:///D:/flutter/flutter/packages/flutter_test",
       "packageUri": "lib/",
@@ -584,6 +590,30 @@
       "languageVersion": "2.18"
     },
     {
+      "name": "stripe_android",
+      "rootUri": "file:///C:/Users/IPK/AppData/Local/Pub/Cache/hosted/pub.dev/stripe_android-11.5.0",
+      "packageUri": "lib/",
+      "languageVersion": "3.0"
+    },
+    {
+      "name": "stripe_ios",
+      "rootUri": "file:///C:/Users/IPK/AppData/Local/Pub/Cache/hosted/pub.dev/stripe_ios-11.5.0",
+      "packageUri": "lib/",
+      "languageVersion": "3.0"
+    },
+    {
+      "name": "stripe_payment",
+      "rootUri": "file:///C:/Users/IPK/AppData/Local/Pub/Cache/hosted/pub.dev/stripe_payment-1.1.4",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "stripe_platform_interface",
+      "rootUri": "file:///C:/Users/IPK/AppData/Local/Pub/Cache/hosted/pub.dev/stripe_platform_interface-11.3.0",
+      "packageUri": "lib/",
+      "languageVersion": "3.0"
+    },
+    {
       "name": "synchronized",
       "rootUri": "file:///C:/Users/IPK/AppData/Local/Pub/Cache/hosted/pub.dev/synchronized-3.3.0+3",
       "packageUri": "lib/",
@@ -650,7 +680,7 @@
       "languageVersion": "3.5"
     }
   ],
-  "generated": "2025-03-21T14:22:09.325463Z",
+  "generated": "2025-05-05T14:07:28.718070Z",
   "generator": "pub",
   "generatorVersion": "3.5.3",
   "flutterRoot": "file:///D:/flutter/flutter",
