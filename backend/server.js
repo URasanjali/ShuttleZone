@@ -1,31 +1,38 @@
 const express = require('express');
 const Stripe = require('stripe');
 const bodyParser = require('body-parser');
+const cors = require('cors');  // Import the cors package
 require('dotenv').config();
 
 const app = express();
 const stripe = Stripe(process.env.STRIPE_SECRET_KEY);  // Your secret key from Stripe
 
+// Enable CORS for all routes
+app.use(cors());
+
+// Parse incoming JSON requests
 app.use(bodyParser.json());
 
 // Endpoint to create a payment intent
+// Endpoint to create a payment intent
 app.post('/create-payment-intent', async (req, res) => {
-  const { amount } = req.body;  // Get the amount from the request
-
-  try {
-    const paymentIntent = await stripe.paymentIntents.create({
-      amount: amount * 100, // Amount in cents
-      currency: 'usd',
-      payment_method_types: ['card'],
-    });
-
-    res.json({
-      clientSecret: paymentIntent.client_secret,
-    });
-  } catch (error) {
-    res.status(500).send({ error: error.message });
-  }
-});
+    const { totalCost } = req.body;  // ✅ expect 'totalCost'
+  
+    try {
+      const paymentIntent = await stripe.paymentIntents.create({
+        amount: totalCost, // already in cents from Flutter
+        currency: 'usd',
+        payment_method_types: ['card'],
+      });
+  
+      res.json({
+        clientSecret: paymentIntent.client_secret,
+      });
+    } catch (error) {
+      res.status(500).send({ error: error.message });
+    }
+  });
+  
 
 // **Add this endpoint for confirming the payment**
 app.post('/confirm-payment', async (req, res) => {

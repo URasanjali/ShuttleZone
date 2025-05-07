@@ -3,8 +3,7 @@ import 'package:flutter/material.dart';
 class FilteredCourtsScreen extends StatelessWidget {
   final List<Map<String, dynamic>> filteredCourts;
 
-  const FilteredCourtsScreen({Key? key, required this.filteredCourts})
-      : super(key: key);
+  const FilteredCourtsScreen({super.key, required this.filteredCourts});
 
   @override
   Widget build(BuildContext context) {

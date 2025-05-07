@@ -8,7 +8,7 @@ import 'package:shuttlezone/pages/profilepage.dart';
 import 'package:shuttlezone/pages/bookings_page.dart';
 
 class Home extends StatefulWidget {
-  const Home({Key? key}) : super(key: key);
+  const Home({super.key});
 
   @override
   _HomeState createState() => _HomeState();
@@ -261,7 +261,7 @@ class _HomeState extends State<Home> {
             case 2:
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => ProfilePage()),
+                MaterialPageRoute(builder: (context) => const ProfilePage()),
               );
               break;
           }
@@ -294,14 +294,14 @@ class CourtCard extends StatelessWidget {
   final String courtDistrict;
 
   const CourtCard({
-    Key? key,
+    super.key,
     required this.name,
     required this.District,
     required this.image,
     required this.courtId,
     required this.userId,
     required this.courtDistrict,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
