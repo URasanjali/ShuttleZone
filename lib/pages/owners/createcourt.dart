@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
-import 'package:intl/intl.dart';
 
 class CreateCourtScreen extends StatefulWidget {
   const CreateCourtScreen({super.key});
@@ -585,7 +584,7 @@ class _CreateCourtScreenState extends State<CreateCourtScreen> {
                                 selectedDate != null
                                     ? "${selectedDate!.toLocal()}".split(' ')[0]
                                     : 'Select a date',
-                                style: TextStyle(fontSize: 16),
+                                style: const TextStyle(fontSize: 16),
                               ),
                             ],
                           ),

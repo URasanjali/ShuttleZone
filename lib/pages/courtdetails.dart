@@ -219,7 +219,7 @@ class Courtdetails extends StatefulWidget {
   final String courtId;
 
   const Courtdetails({
-    Key? key,
+    super.key,
     required this.userId,
     required this.courtDistrict,
     required this.name,
@@ -227,7 +227,7 @@ class Courtdetails extends StatefulWidget {
     required this.image,
     required this.courtName,
     required this.courtId,
-  }) : super(key: key);
+  });
 
   @override
   _CourtdetailsState createState() => _CourtdetailsState();

@@ -6,10 +6,10 @@ class FilterScreen extends StatefulWidget {
   final Function(List<Map<String, dynamic>>) onFiltersApplied;
 
   const FilterScreen({
-    Key? key,
+    super.key,
     required this.courtsData,
     required this.onFiltersApplied,
-  }) : super(key: key);
+  });
 
   @override
   _FilterScreenState createState() => _FilterScreenState();

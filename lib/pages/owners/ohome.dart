@@ -255,7 +255,7 @@ class _Ohome extends State<Ohome> {
               // Navigate to Profile page
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => ProfilePage()),
+                MaterialPageRoute(builder: (context) => const ProfilePage()),
               );
               break;
           }

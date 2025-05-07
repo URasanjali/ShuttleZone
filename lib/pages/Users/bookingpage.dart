@@ -844,8 +844,11 @@ class _BookingPageState extends State<BookingPage> {
 }
 
 Future<void> handleConfirmBooking() async {
-  if (courtOwnerId == null || selectedDate == null || selectedSlots.isEmpty) return;
-
+  if (courtOwnerId == null || selectedDate == null || selectedSlots.isEmpty) {
+     print("❌ Invalid court owner or court ID");
+  return;
+    
+  }
   try {
     final currentUser = FirebaseAuth.instance.currentUser;
 
@@ -863,15 +866,15 @@ Future<void> handleConfirmBooking() async {
         .toList();
 
     // ✅ Update Courtowners
-    await FirebaseFirestore.instance
-        .collection('Courtowners')
-        .doc(courtOwnerId)
-        .collection('courts')
-        .doc(widget.courtId)
-        .update({
-      'availableDaysAndSlots': FieldValue.arrayRemove(bookingSlotDetails),
-      'bookedSlots': FieldValue.arrayUnion(bookingSlotDetails),
-    });
+    // await FirebaseFirestore.instance
+    //     .collection('Courtowners')
+    //     .doc(courtOwnerId)
+    //     .collection('courts')
+    //     .doc(widget.courtId)
+    //     .update({
+    //   'availableDaysAndSlots': FieldValue.arrayRemove(bookingSlotDetails),
+    //   'bookedSlots': FieldValue.arrayUnion(bookingSlotDetails),
+    // });
 
     // ✅ Save to correct user's booking path
     await FirebaseFirestore.instance
@@ -905,9 +908,9 @@ Future<void> handleConfirmBooking() async {
       context,
       MaterialPageRoute(
         builder: (context) => PaymentPage(
-          amount: paymentAmount,
+          totalCost: paymentAmount,
           userId: userId,
-          courtName: widget.courtName,
+          courtName: widget.courtName, bookingId: '',
         ),
       ),
     );
@@ -1091,14 +1094,14 @@ Future<void> handleConfirmBooking() async {
               child: const Text("Add Time Slot"),
             ),
 const SizedBox(height: 20),
-Text("Selected Time Slots:", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+const Text("Selected Time Slots:", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
 
 Wrap(
   spacing: 8.0,
   children: selectedSlots.map((slot) {
     return Chip(
       label: Text(slot),
-      deleteIcon: Icon(Icons.cancel, color: Colors.red),
+      deleteIcon: const Icon(Icons.cancel, color: Colors.red),
       onDeleted: () {
         setState(() {
           availableSlots.add(slot); // Restore slot back to dropdown
