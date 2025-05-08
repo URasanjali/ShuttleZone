@@ -697,6 +697,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
+import 'package:shuttlezone/pages/Users/payment_popup.dart';
 import 'package:shuttlezone/pages/Users/paymentpage.dart'; // For date formatting
 
 class BookingPage extends StatefulWidget {
@@ -843,11 +844,94 @@ class _BookingPageState extends State<BookingPage> {
   }
 }
 
+// Future<void> handleConfirmBooking() async {
+//   if (courtOwnerId == null || selectedDate == null || selectedSlots.isEmpty) {
+//      print("❌ Invalid court owner or court ID");
+//   return;
+    
+//   }
+//   try {
+//     final currentUser = FirebaseAuth.instance.currentUser;
+
+//     if (currentUser == null) {
+//       print("❌ No user is currently signed in");
+//       return;
+//     }
+
+//     final userId = currentUser.uid;
+
+//     String selectedDateString = DateFormat('yyyy-MM-dd').format(selectedDate!);
+
+//     List<Map<String, String>> bookingSlotDetails = selectedSlots
+//         .map((slot) => {'date': selectedDateString, 'time': slot})
+//         .toList();
+
+//     // ✅ Update Courtowners
+//     // await FirebaseFirestore.instance
+//     //     .collection('Courtowners')
+//     //     .doc(courtOwnerId)
+//     //     .collection('courts')
+//     //     .doc(widget.courtId)
+//     //     .update({
+//     //   'availableDaysAndSlots': FieldValue.arrayRemove(bookingSlotDetails),
+//     //   'bookedSlots': FieldValue.arrayUnion(bookingSlotDetails),
+//     // });
+
+//     // ✅ Save to correct user's booking path
+//     await FirebaseFirestore.instance
+//         .collection('Court Booker')
+//         .doc(userId) // ← this ensures correct user
+//         .collection('bookings')
+//         .add({
+//       'courtId': widget.courtId,
+//       'courtName': widget.courtName,
+//       'courtOwnerId': courtOwnerId,
+//       'date': selectedDateString,
+//       'slots': selectedSlots,
+//       'totalCost': totalCost,
+//       'timestamp': FieldValue.serverTimestamp(),
+//     });
+
+//     print("✅ Booking saved for user: $userId");
+
+//     int paymentAmount = totalCost;
+
+//     setState(() {
+//       selectedSlots.clear();
+//       totalCost = 0;
+//     });
+
+//     ScaffoldMessenger.of(context).showSnackBar(
+//       const SnackBar(content: Text('Booking confirmed! Proceeding to payment...')),
+//     );
+
+//     // Navigator.push(
+//     //   context,
+//     //   MaterialPageRoute(
+//     //     builder: (context) => PaymentPage(
+//     //       totalCost: paymentAmount,
+//     //       userId: userId,
+//     //       courtName: widget.courtName, bookingId: '',
+//     //     ),
+//     //   ),
+//     // );
+
+
+//     onPressed: () {
+//   showDialog(
+//     context: context,
+//     builder: (context) => const PaymentPopup(),
+//   );
+// };
+//   } catch (error) {
+//     print("🔥 Error during booking: $error");
+//   }
+// }
+
 Future<void> handleConfirmBooking() async {
   if (courtOwnerId == null || selectedDate == null || selectedSlots.isEmpty) {
-     print("❌ Invalid court owner or court ID");
-  return;
-    
+    print("❌ Invalid court owner or court ID");
+    return;
   }
   try {
     final currentUser = FirebaseAuth.instance.currentUser;
@@ -864,17 +948,6 @@ Future<void> handleConfirmBooking() async {
     List<Map<String, String>> bookingSlotDetails = selectedSlots
         .map((slot) => {'date': selectedDateString, 'time': slot})
         .toList();
-
-    // ✅ Update Courtowners
-    // await FirebaseFirestore.instance
-    //     .collection('Courtowners')
-    //     .doc(courtOwnerId)
-    //     .collection('courts')
-    //     .doc(widget.courtId)
-    //     .update({
-    //   'availableDaysAndSlots': FieldValue.arrayRemove(bookingSlotDetails),
-    //   'bookedSlots': FieldValue.arrayUnion(bookingSlotDetails),
-    // });
 
     // ✅ Save to correct user's booking path
     await FirebaseFirestore.instance
@@ -904,21 +977,20 @@ Future<void> handleConfirmBooking() async {
       const SnackBar(content: Text('Booking confirmed! Proceeding to payment...')),
     );
 
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => PaymentPage(
-          totalCost: paymentAmount,
-          userId: userId,
-          courtName: widget.courtName, bookingId: '',
-        ),
+    // Show the payment popup
+    showDialog(
+      context: context,
+      builder: (context) => PaymentPopup(
+        totalCost: paymentAmount,
+        userId: userId,
+        courtName: widget.courtName,
+        bookingId: '',  // Provide the booking ID here if needed
       ),
     );
   } catch (error) {
     print("🔥 Error during booking: $error");
   }
 }
-
 
 
 // Future<void> handleConfirmBooking() async {
