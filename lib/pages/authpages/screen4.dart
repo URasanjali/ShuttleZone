@@ -532,7 +532,7 @@ Widget build(BuildContext context) {
                 ),
                 child: const Text(
                   'Sign Up',
-                  style: TextStyle(fontSize: 16,color: Color(0xFF0A6731),),
+                  style: TextStyle(fontSize: 16,color: Colors.white,),
                 ),
               ),
             ),

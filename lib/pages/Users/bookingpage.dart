@@ -1123,29 +1123,128 @@ Future<void> handleConfirmBooking() async {
     }
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("Book a Court for ${widget.courtName}"),
-        backgroundColor: const Color(0xFF1B7340),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            ElevatedButton(
-              onPressed: () => selectDate(context),
-              child: Text(selectedDate == null ? "Select Date" : DateFormat('yyyy-MM-dd').format(selectedDate!)),
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       appBar: AppBar(
+//         title: Text("Book a Court for ${widget.courtName}"),
+//         backgroundColor: const Color(0xFF1B7340),
+//       ),
+//       body: Padding(
+//         padding: const EdgeInsets.all(16.0),
+//         child: Column(
+//           crossAxisAlignment: CrossAxisAlignment.start,
+//           children: [
+//             ElevatedButton(
+//               onPressed: () => selectDate(context),
+//               child: Text(selectedDate == null ? "Select Date" : DateFormat('yyyy-MM-dd').format(selectedDate!)),
+//             ),
+
+//             const SizedBox(height: 20),
+
+//             DropdownButton<String>(
+//               value: selectedSlot,
+//               hint: const Text("Choose a time slot"),
+//               isExpanded: true,
+//               onChanged: (String? slot) {
+//                 setState(() {
+//                   selectedSlot = slot;
+//                 });
+//               },
+//               items: availableSlots.map((slot) {
+//                 return DropdownMenuItem(
+//                   value: slot,
+//                   child: Text(slot),
+//                 );
+//               }).toList(),
+//             ),
+
+//             const SizedBox(height: 20),
+
+//             ElevatedButton(
+//               onPressed: handleAddSlot,
+//               child: const Text("Add Time Slot"),
+//             ),
+// const SizedBox(height: 20),
+// const Text("Selected Time Slots:", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+
+// Wrap(
+//   spacing: 8.0,
+//   children: selectedSlots.map((slot) {
+//     return Chip(
+//       label: Text(slot),
+//       deleteIcon: const Icon(Icons.cancel, color: Colors.red),
+//       onDeleted: () {
+//         setState(() {
+//           availableSlots.add(slot); // Restore slot back to dropdown
+//           selectedSlots.remove(slot);
+//           totalCost -= courtCostPer30Min;
+//         });
+//       },
+//     );
+//   }).toList(),
+// ),
+
+//             const SizedBox(height: 20),
+
+//             Text("Total Cost: Rs. $totalCost", style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+
+//             ElevatedButton(
+//               onPressed: selectedSlots.isNotEmpty ? handleConfirmBooking : null,
+//               child: const Text("Confirm Booking"),
+//             ),
+//           ],
+//         ),
+//       ),
+//     );
+//   }
+
+@override
+Widget build(BuildContext context) {
+  return Scaffold(
+    appBar: AppBar(
+      title: Text("Book a Court for ${widget.courtName}"),
+      backgroundColor: const Color(0xFF1B7340),
+    ),
+    body: Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Date Picker
+          Container(
+            decoration: BoxDecoration(
+              border: Border.all(color: Colors.grey),
+              borderRadius: BorderRadius.circular(8),
             ),
+            child: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                elevation: 0,
+                backgroundColor: Colors.white,
+                foregroundColor: Colors.black,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+              ),
+              onPressed: () => selectDate(context),
+              child: Text(
+                selectedDate == null ? "Select Date" : DateFormat('yyyy-MM-dd').format(selectedDate!),
+              ),
+            ),
+          ),
 
-            const SizedBox(height: 20),
+          const SizedBox(height: 20),
 
-            DropdownButton<String>(
+          // Dropdown
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12),
+            decoration: BoxDecoration(
+              border: Border.all(color: Colors.grey),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: DropdownButton<String>(
               value: selectedSlot,
               hint: const Text("Choose a time slot"),
               isExpanded: true,
+              underline: const SizedBox(),
               onChanged: (String? slot) {
                 setState(() {
                   selectedSlot = slot;
@@ -1158,44 +1257,64 @@ Future<void> handleConfirmBooking() async {
                 );
               }).toList(),
             ),
+          ),
 
-            const SizedBox(height: 20),
+          const SizedBox(height: 20),
 
-            ElevatedButton(
+          // Add Time Slot Button
+          SizedBox(
+            width: double.infinity,
+            child: ElevatedButton(
               onPressed: handleAddSlot,
-              child: const Text("Add Time Slot"),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFF1B7340),
+              ),
+              child: const Text("Add Time Slot", style: TextStyle(fontSize: 16,color: Colors.white,),),
             ),
-const SizedBox(height: 20),
-const Text("Selected Time Slots:", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+          ),
 
-Wrap(
-  spacing: 8.0,
-  children: selectedSlots.map((slot) {
-    return Chip(
-      label: Text(slot),
-      deleteIcon: const Icon(Icons.cancel, color: Colors.red),
-      onDeleted: () {
-        setState(() {
-          availableSlots.add(slot); // Restore slot back to dropdown
-          selectedSlots.remove(slot);
-          totalCost -= courtCostPer30Min;
-        });
-      },
-    );
-  }).toList(),
-),
+          const SizedBox(height: 20),
+          const Text("Selected Time Slots:", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
 
-            const SizedBox(height: 20),
+          Wrap(
+            spacing: 8.0,
+            children: selectedSlots.map((slot) {
+              return Chip(
+                label: Text(slot),
+                deleteIcon: const Icon(Icons.cancel, color: Colors.red),
+                onDeleted: () {
+                  setState(() {
+                    availableSlots.add(slot); // Restore slot back to dropdown
+                    selectedSlots.remove(slot);
+                    totalCost -= courtCostPer30Min;
+                  });
+                },
+              );
+            }).toList(),
+          ),
 
-            Text("Total Cost: Rs. $totalCost", style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+          const SizedBox(height: 20),
 
-            ElevatedButton(
+          Text("Total Cost: Rs. $totalCost", style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+
+          const SizedBox(height: 10),
+
+          // Confirm Booking Button
+          SizedBox(
+            width: double.infinity,
+            child: ElevatedButton(
               onPressed: selectedSlots.isNotEmpty ? handleConfirmBooking : null,
-              child: const Text("Confirm Booking"),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFF1B7340),
+              ),
+              child: const Text("Confirm Booking" , style: TextStyle(fontSize: 16,color: Colors.white,),),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
-    );
-  }
+    ),
+  );
+}
+
+
 }

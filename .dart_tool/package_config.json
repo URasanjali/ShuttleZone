@@ -308,6 +308,12 @@
       "languageVersion": "2.12"
     },
     {
+      "name": "image_gallery_saver",
+      "rootUri": "file:///C:/Users/IPK/AppData/Local/Pub/Cache/hosted/pub.dev/image_gallery_saver-2.0.3",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "image_picker",
       "rootUri": "file:///C:/Users/IPK/AppData/Local/Pub/Cache/hosted/pub.dev/image_picker-1.1.2",
       "packageUri": "lib/",
@@ -782,7 +788,7 @@
       "languageVersion": "3.5"
     }
   ],
-  "generated": "2025-05-07T22:21:34.315081Z",
+  "generated": "2025-05-08T04:16:21.573659Z",
   "generator": "pub",
   "generatorVersion": "3.5.3",
   "flutterRoot": "file:///D:/flutter/flutter",
