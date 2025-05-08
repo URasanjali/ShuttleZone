@@ -285,6 +285,121 @@ void navigateToAuthPage() {
     );
 }
 
+// @override
+// Widget build(BuildContext context) {
+//   return Scaffold(
+//     backgroundColor: Colors.white,
+//     body: SafeArea(
+//       child: SingleChildScrollView(
+//         padding: const EdgeInsets.all(24.0),
+//         child: Column(
+//           crossAxisAlignment: CrossAxisAlignment.start,
+//           children: [
+//             const SizedBox(height: 20),
+//             const Text(
+//               'Create Account',
+//               style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
+//             ),
+//             const SizedBox(height: 32),
+//             TextField(
+//               controller: usernameController,
+//               decoration: const InputDecoration(labelText: 'Username'),
+//             ),
+//             const SizedBox(height: 24),
+//             TextField(
+//               controller: emailController,
+//               decoration: const InputDecoration(labelText: 'Email'),
+//               keyboardType: TextInputType.emailAddress,
+//             ),
+//             const SizedBox(height: 24),
+//             TextField(
+//               controller: passwordController,
+//               decoration: const InputDecoration(labelText: 'Password'),
+//               obscureText: true,
+//             ),
+//             const SizedBox(height: 24),
+//             TextField(
+//               controller: confirmPasswordController,
+//               decoration: const InputDecoration(labelText: 'Confirm Password'),
+//               obscureText: true,
+//             ),
+//             const SizedBox(height: 24),
+//             const Text(
+//               'Select Role',
+//               style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+//             ),
+//             DropdownButton<String>(
+//               value: selectedRole,
+//               items: ['Court Booker', 'Court Owner'].map((role) {
+//                 return DropdownMenuItem<String>(
+//                   value: role,
+//                   child: Text(role),
+//                 );
+//               }).toList(),
+//               onChanged: (value) {
+//                 setState(() {
+//                   selectedRole = value!;
+//                 });
+//               },
+//             )
+//             ,
+//                         if (errorMessage != null)
+//               Padding(
+//                 padding: const EdgeInsets.only(top: 8.0),
+//                 child: Text(
+//                   errorMessage!,
+//                   style: const TextStyle(color: Colors.red),
+//                 ),
+//               ),
+//             const SizedBox(height: 24),
+//             Row(
+//               children: [
+//                 Checkbox(
+//                   value: acceptTerms,
+//                   onChanged: (value) {
+//                     setState(() {
+//                       acceptTerms = value ?? false;
+//                     });
+//                   },
+//                 ),
+//                 const Text('I accept the terms and conditions'),
+//               ],
+//             ),
+//             const SizedBox(height: 24),
+//             SizedBox(
+//               width: double.infinity,
+//               child: ElevatedButton(
+//                 onPressed: signUp,
+//                 child: const Text('Sign Up'),
+//               ),
+//             ),
+//             const SizedBox(height: 16),
+//             Center(
+//               child: Row(
+//                 mainAxisAlignment: MainAxisAlignment.center,
+//                 children: [
+//                   const Text("Don't you have an account? "),
+//                   GestureDetector(
+//                     onTap:navigateToAuthPage,// Navigate to login
+//                     child: const Text(
+//                       'Login',
+//                       style: TextStyle(
+//                         color: Colors.blue,
+//                         fontWeight: FontWeight.bold,
+//                       ),
+//                     ),
+//                   ),
+//                 ],
+//               ),
+//             ),
+//           ],
+//         ),
+//       ),
+//     ),
+//   );
+// }
+
+
 @override
 Widget build(BuildContext context) {
   return Scaffold(
@@ -301,49 +416,81 @@ Widget build(BuildContext context) {
               style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 32),
+
+            // Username Field
             TextField(
               controller: usernameController,
-              decoration: const InputDecoration(labelText: 'Username'),
+              decoration: const InputDecoration(
+                labelText: 'Username',
+                border: OutlineInputBorder(),
+              ),
             ),
             const SizedBox(height: 24),
+
+            // Email Field
             TextField(
               controller: emailController,
-              decoration: const InputDecoration(labelText: 'Email'),
+              decoration: const InputDecoration(
+                labelText: 'Email',
+                border: OutlineInputBorder(),
+              ),
               keyboardType: TextInputType.emailAddress,
             ),
             const SizedBox(height: 24),
+
+            // Password Field
             TextField(
               controller: passwordController,
-              decoration: const InputDecoration(labelText: 'Password'),
+              decoration: const InputDecoration(
+                labelText: 'Password',
+                border: OutlineInputBorder(),
+              ),
               obscureText: true,
             ),
             const SizedBox(height: 24),
+
+            // Confirm Password Field
             TextField(
               controller: confirmPasswordController,
-              decoration: const InputDecoration(labelText: 'Confirm Password'),
+              decoration: const InputDecoration(
+                labelText: 'Confirm Password',
+                border: OutlineInputBorder(),
+              ),
               obscureText: true,
             ),
             const SizedBox(height: 24),
+
+            // Select Role Dropdown
             const Text(
               'Select Role',
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
             ),
-            DropdownButton<String>(
-              value: selectedRole,
-              items: ['Court Booker', 'Court Owner'].map((role) {
-                return DropdownMenuItem<String>(
-                  value: role,
-                  child: Text(role),
-                );
-              }).toList(),
-              onChanged: (value) {
-                setState(() {
-                  selectedRole = value!;
-                });
-              },
-            )
-            ,
-                        if (errorMessage != null)
+            const SizedBox(height: 8),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12),
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.grey),
+                borderRadius: BorderRadius.circular(5),
+              ),
+              child: DropdownButton<String>(
+                value: selectedRole,
+                isExpanded: true,
+                underline: const SizedBox(),
+                items: ['Court Booker', 'Court Owner'].map((role) {
+                  return DropdownMenuItem<String>(
+                    value: role,
+                    child: Text(role),
+                  );
+                }).toList(),
+                onChanged: (value) {
+                  setState(() {
+                    selectedRole = value!;
+                  });
+                },
+              ),
+            ),
+
+            if (errorMessage != null)
               Padding(
                 padding: const EdgeInsets.only(top: 8.0),
                 child: Text(
@@ -352,6 +499,8 @@ Widget build(BuildContext context) {
                 ),
               ),
             const SizedBox(height: 24),
+
+            // Accept Terms
             Row(
               children: [
                 Checkbox(
@@ -362,29 +511,52 @@ Widget build(BuildContext context) {
                     });
                   },
                 ),
-                const Text('I accept the terms and conditions'),
+                const Expanded(
+                  child: Text('I accept the terms and conditions'),
+                ),
               ],
             ),
             const SizedBox(height: 24),
+
+            // Sign Up Button
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
                 onPressed: signUp,
-                child: const Text('Sign Up'),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFF0B6831),
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(6),
+                  ),
+                ),
+                child: const Text(
+                  'Sign Up',
+                  style: TextStyle(fontSize: 16,color: Colors.white,),
+                ),
               ),
             ),
+
             const SizedBox(height: 16),
+
+            // Social Login Text
+            const Center(child: Text('or login with')),
+            const SizedBox(height: 16),
+
+            // Google Login
+        
+            // Navigate to Login
             Center(
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Text("Don't you have an account? "),
+                  const Text("Don't have an account? "),
                   GestureDetector(
-                    onTap:navigateToAuthPage,// Navigate to login
+                    onTap: navigateToAuthPage,
                     child: const Text(
                       'Login',
                       style: TextStyle(
-                        color: Colors.blue,
+                        color: Colors.green,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -398,4 +570,5 @@ Widget build(BuildContext context) {
     ),
   );
 }
+
 }

@@ -697,6 +697,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
+import 'package:shuttlezone/pages/Users/payment_popup.dart';
 import 'package:shuttlezone/pages/Users/paymentpage.dart'; // For date formatting
 
 class BookingPage extends StatefulWidget {
@@ -843,11 +844,94 @@ class _BookingPageState extends State<BookingPage> {
   }
 }
 
+// Future<void> handleConfirmBooking() async {
+//   if (courtOwnerId == null || selectedDate == null || selectedSlots.isEmpty) {
+//      print("❌ Invalid court owner or court ID");
+//   return;
+    
+//   }
+//   try {
+//     final currentUser = FirebaseAuth.instance.currentUser;
+
+//     if (currentUser == null) {
+//       print("❌ No user is currently signed in");
+//       return;
+//     }
+
+//     final userId = currentUser.uid;
+
+//     String selectedDateString = DateFormat('yyyy-MM-dd').format(selectedDate!);
+
+//     List<Map<String, String>> bookingSlotDetails = selectedSlots
+//         .map((slot) => {'date': selectedDateString, 'time': slot})
+//         .toList();
+
+//     // ✅ Update Courtowners
+//     // await FirebaseFirestore.instance
+//     //     .collection('Courtowners')
+//     //     .doc(courtOwnerId)
+//     //     .collection('courts')
+//     //     .doc(widget.courtId)
+//     //     .update({
+//     //   'availableDaysAndSlots': FieldValue.arrayRemove(bookingSlotDetails),
+//     //   'bookedSlots': FieldValue.arrayUnion(bookingSlotDetails),
+//     // });
+
+//     // ✅ Save to correct user's booking path
+//     await FirebaseFirestore.instance
+//         .collection('Court Booker')
+//         .doc(userId) // ← this ensures correct user
+//         .collection('bookings')
+//         .add({
+//       'courtId': widget.courtId,
+//       'courtName': widget.courtName,
+//       'courtOwnerId': courtOwnerId,
+//       'date': selectedDateString,
+//       'slots': selectedSlots,
+//       'totalCost': totalCost,
+//       'timestamp': FieldValue.serverTimestamp(),
+//     });
+
+//     print("✅ Booking saved for user: $userId");
+
+//     int paymentAmount = totalCost;
+
+//     setState(() {
+//       selectedSlots.clear();
+//       totalCost = 0;
+//     });
+
+//     ScaffoldMessenger.of(context).showSnackBar(
+//       const SnackBar(content: Text('Booking confirmed! Proceeding to payment...')),
+//     );
+
+//     // Navigator.push(
+//     //   context,
+//     //   MaterialPageRoute(
+//     //     builder: (context) => PaymentPage(
+//     //       totalCost: paymentAmount,
+//     //       userId: userId,
+//     //       courtName: widget.courtName, bookingId: '',
+//     //     ),
+//     //   ),
+//     // );
+
+
+//     onPressed: () {
+//   showDialog(
+//     context: context,
+//     builder: (context) => const PaymentPopup(),
+//   );
+// };
+//   } catch (error) {
+//     print("🔥 Error during booking: $error");
+//   }
+// }
+
 Future<void> handleConfirmBooking() async {
   if (courtOwnerId == null || selectedDate == null || selectedSlots.isEmpty) {
-     print("❌ Invalid court owner or court ID");
-  return;
-    
+    print("❌ Invalid court owner or court ID");
+    return;
   }
   try {
     final currentUser = FirebaseAuth.instance.currentUser;
@@ -864,17 +948,6 @@ Future<void> handleConfirmBooking() async {
     List<Map<String, String>> bookingSlotDetails = selectedSlots
         .map((slot) => {'date': selectedDateString, 'time': slot})
         .toList();
-
-    // ✅ Update Courtowners
-    // await FirebaseFirestore.instance
-    //     .collection('Courtowners')
-    //     .doc(courtOwnerId)
-    //     .collection('courts')
-    //     .doc(widget.courtId)
-    //     .update({
-    //   'availableDaysAndSlots': FieldValue.arrayRemove(bookingSlotDetails),
-    //   'bookedSlots': FieldValue.arrayUnion(bookingSlotDetails),
-    // });
 
     // ✅ Save to correct user's booking path
     await FirebaseFirestore.instance
@@ -904,21 +977,20 @@ Future<void> handleConfirmBooking() async {
       const SnackBar(content: Text('Booking confirmed! Proceeding to payment...')),
     );
 
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => PaymentPage(
-          totalCost: paymentAmount,
-          userId: userId,
-          courtName: widget.courtName, bookingId: '',
-        ),
+    // Show the payment popup
+    showDialog(
+      context: context,
+      builder: (context) => PaymentPopup(
+        totalCost: paymentAmount,
+        userId: userId,
+        courtName: widget.courtName,
+        bookingId: '',  // Provide the booking ID here if needed
       ),
     );
   } catch (error) {
     print("🔥 Error during booking: $error");
   }
 }
-
 
 
 // Future<void> handleConfirmBooking() async {
@@ -1051,29 +1123,128 @@ Future<void> handleConfirmBooking() async {
     }
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("Book a Court for ${widget.courtName}"),
-        backgroundColor: const Color(0xFF1B7340),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            ElevatedButton(
-              onPressed: () => selectDate(context),
-              child: Text(selectedDate == null ? "Select Date" : DateFormat('yyyy-MM-dd').format(selectedDate!)),
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       appBar: AppBar(
+//         title: Text("Book a Court for ${widget.courtName}"),
+//         backgroundColor: const Color(0xFF1B7340),
+//       ),
+//       body: Padding(
+//         padding: const EdgeInsets.all(16.0),
+//         child: Column(
+//           crossAxisAlignment: CrossAxisAlignment.start,
+//           children: [
+//             ElevatedButton(
+//               onPressed: () => selectDate(context),
+//               child: Text(selectedDate == null ? "Select Date" : DateFormat('yyyy-MM-dd').format(selectedDate!)),
+//             ),
+
+//             const SizedBox(height: 20),
+
+//             DropdownButton<String>(
+//               value: selectedSlot,
+//               hint: const Text("Choose a time slot"),
+//               isExpanded: true,
+//               onChanged: (String? slot) {
+//                 setState(() {
+//                   selectedSlot = slot;
+//                 });
+//               },
+//               items: availableSlots.map((slot) {
+//                 return DropdownMenuItem(
+//                   value: slot,
+//                   child: Text(slot),
+//                 );
+//               }).toList(),
+//             ),
+
+//             const SizedBox(height: 20),
+
+//             ElevatedButton(
+//               onPressed: handleAddSlot,
+//               child: const Text("Add Time Slot"),
+//             ),
+// const SizedBox(height: 20),
+// const Text("Selected Time Slots:", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+
+// Wrap(
+//   spacing: 8.0,
+//   children: selectedSlots.map((slot) {
+//     return Chip(
+//       label: Text(slot),
+//       deleteIcon: const Icon(Icons.cancel, color: Colors.red),
+//       onDeleted: () {
+//         setState(() {
+//           availableSlots.add(slot); // Restore slot back to dropdown
+//           selectedSlots.remove(slot);
+//           totalCost -= courtCostPer30Min;
+//         });
+//       },
+//     );
+//   }).toList(),
+// ),
+
+//             const SizedBox(height: 20),
+
+//             Text("Total Cost: Rs. $totalCost", style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+
+//             ElevatedButton(
+//               onPressed: selectedSlots.isNotEmpty ? handleConfirmBooking : null,
+//               child: const Text("Confirm Booking"),
+//             ),
+//           ],
+//         ),
+//       ),
+//     );
+//   }
+
+@override
+Widget build(BuildContext context) {
+  return Scaffold(
+    appBar: AppBar(
+      title: Text("Book a Court for ${widget.courtName}"),
+      backgroundColor: const Color(0xFF1B7340),
+    ),
+    body: Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Date Picker
+          Container(
+            decoration: BoxDecoration(
+              border: Border.all(color: Colors.grey),
+              borderRadius: BorderRadius.circular(8),
             ),
+            child: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                elevation: 0,
+                backgroundColor: Colors.white,
+                foregroundColor: Colors.black,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+              ),
+              onPressed: () => selectDate(context),
+              child: Text(
+                selectedDate == null ? "Select Date" : DateFormat('yyyy-MM-dd').format(selectedDate!),
+              ),
+            ),
+          ),
 
-            const SizedBox(height: 20),
+          const SizedBox(height: 20),
 
-            DropdownButton<String>(
+          // Dropdown
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12),
+            decoration: BoxDecoration(
+              border: Border.all(color: Colors.grey),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: DropdownButton<String>(
               value: selectedSlot,
               hint: const Text("Choose a time slot"),
               isExpanded: true,
+              underline: const SizedBox(),
               onChanged: (String? slot) {
                 setState(() {
                   selectedSlot = slot;
@@ -1086,44 +1257,64 @@ Future<void> handleConfirmBooking() async {
                 );
               }).toList(),
             ),
+          ),
 
-            const SizedBox(height: 20),
+          const SizedBox(height: 20),
 
-            ElevatedButton(
+          // Add Time Slot Button
+          SizedBox(
+            width: double.infinity,
+            child: ElevatedButton(
               onPressed: handleAddSlot,
-              child: const Text("Add Time Slot"),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFF1B7340),
+              ),
+              child: const Text("Add Time Slot", style: TextStyle(fontSize: 16,color: Colors.white,),),
             ),
-const SizedBox(height: 20),
-const Text("Selected Time Slots:", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+          ),
 
-Wrap(
-  spacing: 8.0,
-  children: selectedSlots.map((slot) {
-    return Chip(
-      label: Text(slot),
-      deleteIcon: const Icon(Icons.cancel, color: Colors.red),
-      onDeleted: () {
-        setState(() {
-          availableSlots.add(slot); // Restore slot back to dropdown
-          selectedSlots.remove(slot);
-          totalCost -= courtCostPer30Min;
-        });
-      },
-    );
-  }).toList(),
-),
+          const SizedBox(height: 20),
+          const Text("Selected Time Slots:", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
 
-            const SizedBox(height: 20),
+          Wrap(
+            spacing: 8.0,
+            children: selectedSlots.map((slot) {
+              return Chip(
+                label: Text(slot),
+                deleteIcon: const Icon(Icons.cancel, color: Colors.red),
+                onDeleted: () {
+                  setState(() {
+                    availableSlots.add(slot); // Restore slot back to dropdown
+                    selectedSlots.remove(slot);
+                    totalCost -= courtCostPer30Min;
+                  });
+                },
+              );
+            }).toList(),
+          ),
 
-            Text("Total Cost: Rs. $totalCost", style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+          const SizedBox(height: 20),
 
-            ElevatedButton(
+          Text("Total Cost: Rs. $totalCost", style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+
+          const SizedBox(height: 10),
+
+          // Confirm Booking Button
+          SizedBox(
+            width: double.infinity,
+            child: ElevatedButton(
               onPressed: selectedSlots.isNotEmpty ? handleConfirmBooking : null,
-              child: const Text("Confirm Booking"),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFF1B7340),
+              ),
+              child: const Text("Confirm Booking" , style: TextStyle(fontSize: 16,color: Colors.white,),),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
-    );
-  }
+    ),
+  );
+}
+
+
 }
